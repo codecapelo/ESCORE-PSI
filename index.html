@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Escores em Psiquiatria — Preencher e Copiar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f4f1e8;--paper-2:#efeadd;--ink:#1d231f;--ink-soft:#525c54;--line:#d8d0bd;
+    --surface:#fffdf7;--green:#1f5135;--green-2:#2c6b47;--green-tint:#e6efe6;
+    --ok:#2c6b47;--ok-bg:#e3efe5;--mild:#9a6312;--mild-bg:#f6ead2;
+    --mod:#b4571c;--mod-bg:#f7e2cf;--sev:#8f3221;--sev-bg:#f4ddd6;--info:#1f5135;
+    --mono:'JetBrains Mono',ui-monospace,monospace;--serif:'Fraunces',Georgia,serif;--sans:'Public Sans',system-ui,sans-serif;
+    --shadow:0 1px 2px rgba(29,35,31,.06),0 8px 24px rgba(29,35,31,.07);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;
+    background-image:radial-gradient(var(--line) .5px,transparent .5px);background-size:22px 22px}
+
+  header.top{max-width:1180px;margin:0 auto;padding:36px 28px 8px}
+  header.top .mark{font-family:var(--mono);font-size:.62rem;letter-spacing:.28em;text-transform:uppercase;color:var(--green-2);margin-bottom:8px}
+  header.top h1{font-family:var(--serif);font-weight:600;font-size:2.4rem;line-height:1.05;letter-spacing:-.02em;margin:0 0 10px}
+  header.top .sub{color:var(--ink-soft);max-width:72ch;font-size:1rem}
+  .disclaimer{max-width:1180px;margin:16px auto 0;padding:0 28px}
+  .disclaimer div{padding:11px 16px;border-radius:10px;background:var(--mild-bg);border:1px solid #e7cf9f;font-size:.82rem;color:#5d4310;display:flex;gap:10px}
+
+  .tabs{position:sticky;top:0;z-index:20;background:rgba(244,241,232,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);margin-top:16px}
+  .tabs .inner{max-width:1180px;margin:0 auto;padding:10px 28px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .tab{font-size:.8rem;font-weight:600;padding:7px 13px;border-radius:20px;border:1px solid var(--line);background:var(--surface);
+    color:var(--ink-soft);cursor:pointer;transition:.15s;font-family:var(--sans)}
+  .tab:hover{border-color:var(--green-2);color:var(--ink)}
+  .tab.active{background:var(--green);color:#f4f1e8;border-color:var(--green)}
+  .search{position:relative;margin-left:6px}
+  .search input{width:170px;padding:8px 10px 8px 30px;border:1px solid var(--line);border-radius:20px;background:var(--surface);font-size:.8rem;color:var(--ink);outline:none}
+  .search input:focus{border-color:var(--green-2);box-shadow:0 0 0 3px var(--green-tint)}
+  .search svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:14px;height:14px;stroke:var(--ink-soft);fill:none;stroke-width:2}
+  .acts{margin-left:auto;display:flex;gap:8px}
+  .acts button{font-size:.76rem;font-weight:600;padding:7px 12px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink-soft);cursor:pointer}
+  .acts button:hover{color:var(--sev);border-color:#d9a99c}
+
+  main{max-width:1180px;margin:0 auto}
+  #grid{padding:24px 28px 150px;display:grid;grid-template-columns:repeat(2,1fr);gap:20px;align-items:start}
+  [hidden]{display:none!important}
+
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column;scroll-margin-top:80px}
+  .card.hl{outline:2px solid var(--green-2);outline-offset:1px}
+  .card .head{padding:15px 18px 11px;border-bottom:1px solid var(--line)}
+  .card .head .cat{font-family:var(--mono);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--green-2)}
+  .card .head h2{font-family:var(--serif);font-weight:600;font-size:1.28rem;margin:4px 0 3px;letter-spacing:-.01em}
+  .card .head p{margin:0;font-size:.81rem;color:var(--ink-soft)}
+  .body{padding:6px 18px 4px}
+  .item{padding:10px 0;border-bottom:1px dashed var(--line)}
+  .item:last-child{border-bottom:none}
+  .item .lab{display:block;font-size:.84rem;margin-bottom:6px}
+  .item .qn{font-family:var(--mono);font-size:.7rem;color:var(--green-2);margin-right:3px}
+  .opts{display:flex;flex-wrap:wrap;gap:6px}
+  .opt{font-family:var(--sans);font-size:.77rem;padding:6px 10px;border:1px solid var(--line);border-radius:8px;background:var(--paper);
+    color:var(--ink-soft);cursor:pointer;transition:.12s;text-align:left;line-height:1.3}
+  .opt:hover{border-color:var(--green-2);color:var(--ink)}
+  .opt.sel{background:var(--green);border-color:var(--green);color:#f4f1e8;font-weight:600}
+  .flag{font-family:var(--mono);font-size:.6rem;background:var(--sev-bg);color:var(--sev);padding:2px 6px;border-radius:5px;margin-left:6px}
+
+  select.drug,select.sex,input.num{font-family:var(--sans);font-size:.82rem;padding:7px 8px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);outline:none;transition:.15s}
+  select.drug,select.sex{min-width:140px}
+  input.num{width:96px;text-align:right;font-family:var(--mono)}
+  select:focus,input.num:focus{border-color:var(--green-2);box-shadow:0 0 0 3px var(--green-tint)}
+  .calcrow{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;padding:12px 0}
+  .calcrow .fld{display:flex;flex-direction:column;gap:4px}
+  .calcrow .fld span{font-size:.72rem;color:var(--ink-soft);font-family:var(--mono)}
+  .calcout{font-family:var(--mono);font-size:.82rem;line-height:1.7;padding-bottom:4px}
+  .calcout b{font-size:1.05rem}
+
+  .result{margin:6px 18px 12px;padding:12px 15px;border-radius:11px;display:flex;align-items:center;gap:14px;background:var(--paper-2);border:1px solid var(--line)}
+  .result .score{font-family:var(--mono);font-weight:700;font-size:1.5rem;line-height:1;white-space:nowrap}
+  .result .score small{font-size:.8rem;color:var(--ink-soft);font-weight:400}
+  .result .interp{font-size:.85rem;font-weight:600;flex:1}
+  .badge{display:inline-block;font-size:.68rem;font-weight:700;padding:3px 9px;border-radius:20px;letter-spacing:.02em;margin-bottom:3px;text-transform:uppercase;font-family:var(--mono)}
+  .result .txt{font-weight:500;color:var(--ink-soft);font-size:.78rem}
+  .lv-ok .score{color:var(--ok)} .lv-ok .badge{background:var(--ok-bg);color:var(--ok)}
+  .lv-mild .score{color:var(--mild)} .lv-mild .badge{background:var(--mild-bg);color:var(--mild)}
+  .lv-mod .score{color:var(--mod)} .lv-mod .badge{background:var(--mod-bg);color:var(--mod)}
+  .lv-sev .score{color:var(--sev)} .lv-sev .badge{background:var(--sev-bg);color:var(--sev)}
+  .lv-info .score{color:var(--info)} .lv-info .badge{background:var(--green-tint);color:var(--info)}
+
+  .info{margin:2px 18px 0}
+  .info summary{cursor:pointer;font-size:.73rem;font-weight:600;color:var(--green);list-style:none;user-select:none}
+  .info summary::-webkit-details-marker{display:none}
+  .info summary:hover{text-decoration:underline}
+  .infobody{margin-top:8px;font-size:.79rem;color:var(--ink-soft);background:var(--paper-2);border:1px solid var(--line);border-radius:9px;padding:10px 12px}
+  .infobody p{margin:4px 0}.infobody b{color:var(--ink)}
+  .foot{font-size:.74rem;color:var(--ink-soft);padding:6px 18px 14px;line-height:1.45}
+  .foot b{color:var(--ink)}
+  .reflink{font-family:var(--mono);font-size:.6rem;font-weight:600;color:var(--green-2);border:1px solid var(--line);border-radius:6px;padding:2px 6px;vertical-align:middle;white-space:nowrap;text-decoration:none}
+  .reflink:hover{background:var(--green-tint);border-color:var(--green-2)}
+  .btns{display:flex;gap:8px;margin-top:10px}
+  .minib{background:none;border:1px solid var(--line);border-radius:7px;color:var(--ink-soft);font-size:.72rem;padding:6px 11px;cursor:pointer;font-family:var(--sans);font-weight:600}
+  .minib:hover{border-color:var(--ink-soft)}
+  .copybtn:hover{border-color:var(--green-2);color:var(--green)}
+  .copybtn.done{border-color:var(--green-2);color:var(--green);background:var(--green-tint)}
+
+  /* barra de resumo */
+  .sumbar{position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--green);color:#f4f1e8;
+    display:flex;align-items:center;gap:14px;padding:11px 22px;box-shadow:0 -2px 16px rgba(29,35,31,.18);
+    transform:translateY(130%);transition:transform .25s}
+  .sumbar.show{transform:translateY(0)}
+  .sumbar .suminfo{font-size:.86rem}
+  .sumbar .suminfo b{font-family:var(--mono);font-size:1.05rem}
+  .sumbar .sumactions{margin-left:auto;display:flex;gap:8px}
+  .sumbar button{font-family:var(--sans);font-size:.8rem;font-weight:700;padding:8px 14px;border-radius:8px;border:1px solid rgba(255,255,255,.35);
+    background:rgba(255,255,255,.12);color:#f4f1e8;cursor:pointer;transition:.15s}
+  .sumbar button:hover{background:rgba(255,255,255,.22)}
+  .sumbar button.primary{background:#f4f1e8;color:var(--green);border-color:#f4f1e8}
+  .sumbar button.primary:hover{background:#fff}
+  .sumbar button.primary.done{background:#cfe3d3}
+
+  .sumpanel{position:fixed;left:0;right:0;bottom:56px;z-index:49;max-height:54vh;overflow:auto;
+    background:var(--surface);border-top:1px solid var(--line);box-shadow:0 -10px 30px rgba(29,35,31,.13);
+    padding:16px 22px 18px;display:none}
+  .sumpanel.show{display:block}
+  .sumpanel .pw{max-width:1180px;margin:0 auto}
+  .sumpanel h3{font-family:var(--serif);font-weight:600;font-size:1.1rem;margin:0 0 4px}
+  .sumpanel .date{font-family:var(--mono);font-size:.72rem;color:var(--ink-soft);margin-bottom:10px}
+  .sumlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:8px}
+  .sumitem{display:flex;align-items:center;gap:10px;font-size:.83rem;padding:8px 11px;border:1px solid var(--line);border-radius:9px;background:var(--paper-2)}
+  .sumitem .dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+  .dot.ok{background:var(--ok)}.dot.mild{background:var(--mild)}.dot.mod{background:var(--mod)}.dot.sev{background:var(--sev)}.dot.info{background:var(--green-2)}
+  .sumitem .txt2{flex:1}.sumitem .txt2 b{color:var(--ink)}
+  .sumempty{color:var(--ink-soft);font-style:italic;font-size:.85rem}
+  .sumpreview{margin-top:12px;font-family:var(--mono);font-size:.74rem;white-space:pre-wrap;background:var(--paper-2);border:1px solid var(--line);border-radius:9px;padding:11px 13px;color:var(--ink-soft);max-height:160px;overflow:auto}
+
+  footer{max-width:1180px;margin:0 auto;padding:0 28px 40px;font-size:.78rem;color:var(--ink-soft)}
+  .noresults{display:none;grid-column:1/-1;padding:40px;text-align:center;color:var(--ink-soft);font-style:italic}
+
+  /* seletor de modo (Escores / Guia) */
+  .moderow{border-bottom:1px solid var(--line);gap:4px!important;padding-bottom:0!important}
+  .mtab{font-family:var(--serif);font-size:1.02rem;font-weight:600;padding:9px 14px;border:none;background:none;color:var(--ink-soft);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+  .mtab.active{color:var(--green);border-bottom-color:var(--green)}
+  .mtab:hover{color:var(--ink)}
+  .gbtn{font-size:.76rem;font-weight:600;padding:7px 12px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink-soft);cursor:pointer;font-family:var(--sans)}
+  .gbtn:hover{color:var(--sev);border-color:#d9a99c}
+  .guidecount{font-family:var(--mono);font-size:.66rem;color:var(--ink-soft);margin-left:6px}
+
+  /* guia de psicofarmacologia */
+  #guide{max-width:1180px;margin:0 auto;padding:22px 28px 120px}
+  #guide section{padding-top:30px;scroll-margin-top:140px}
+  #guide .ghead{font-family:var(--serif);font-weight:600;font-size:1.55rem;margin:0 0 8px;display:flex;align-items:baseline;gap:12px;letter-spacing:-.01em}
+  #guide .ghead .idx{font-family:var(--mono);font-size:.72rem;color:#f4f1e8;background:var(--green);padding:4px 9px;border-radius:7px;font-weight:500;transform:translateY(-3px)}
+  #guide h3{font-family:var(--serif);font-weight:600;font-size:1.12rem;margin:24px 0 8px;color:var(--green)}
+  #guide .lead{color:var(--ink-soft);font-size:.92rem;margin:6px 0 14px;max-width:92ch}
+  #guide .lead b{color:var(--ink)}
+  .tablecard{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);margin:12px 0}
+  .tablecard table{width:100%;border-collapse:collapse;font-size:.84rem}
+  .tablecard thead th{background:var(--green);color:#f4f1e8;font-weight:600;text-align:left;padding:10px 13px;font-size:.7rem;letter-spacing:.04em;text-transform:uppercase}
+  .tablecard tbody td{padding:10px 13px;border-top:1px solid var(--line);vertical-align:top}
+  .tablecard tbody tr:nth-child(even){background:#fbf8f0}
+  .tablecard tbody tr:hover{background:var(--green-tint)}
+  .tablecard tbody td:first-child{font-weight:600;color:var(--ink);white-space:nowrap}
+  .tablecard .dose{font-family:var(--mono);font-size:.79rem;color:var(--green-2);font-weight:500}
+  .tablecard td b{color:var(--sev)}
+  .call{border-radius:11px;padding:13px 16px;margin:16px 0;font-size:.86rem;border:1px solid}
+  .call .t{font-weight:700;display:block;margin-bottom:4px;font-size:.77rem;letter-spacing:.03em;text-transform:uppercase}
+  .call.danger{background:var(--sev-bg);border-color:#d9a99c}.call.danger .t{color:var(--sev)}
+  .call.warn{background:var(--mild-bg);border-color:#e7cf9f}.call.warn .t{color:var(--mild)}
+  .call.info{background:var(--green-tint);border-color:#bcd3bf}.call.info .t{color:var(--green)}
+  .call b{font-weight:700}
+  ul.clean{margin:8px 0;padding-left:20px}ul.clean li{margin:5px 0;font-size:.9rem}
+  .guidenote{display:none;padding:40px;text-align:center;color:var(--ink-soft);font-style:italic}
+
+  @media(max-width:880px){
+    #guide{padding:18px 16px 110px}
+    .tablecard{overflow-x:auto}.tablecard table{min-width:560px}
+    main{padding:0}
+    #grid{grid-template-columns:1fr;padding:20px 16px 160px}
+    header.top{padding:26px 16px 8px}header.top h1{font-size:1.8rem}
+    .disclaimer{padding:0 16px}.tabs .inner{padding:9px 16px}
+    .search{margin-left:0;flex:1}.search input{width:100%}
+    .acts{margin-left:0}
+    .sumbar{padding:10px 14px;gap:8px}.sumbar .suminfo{font-size:.78rem}
+  }
+  @media print{.tabs,.acts,.minib,.sumbar,.sumpanel,.info{display:none}body{background:#fff}#grid{display:block;padding-bottom:0}.card{break-inside:avoid;box-shadow:none;margin-bottom:16px}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="mark">Kit de internação · preencher e copiar</div>
+  <h1>Escores em Psiquiatria</h1>
+  <p class="sub">Toque nas opções para preencher — a pontuação e a interpretação são automáticas. Use <b>⧉ Copiar</b> em cada escala ou <b>Copiar resumo</b> embaixo para levar todos os escores preenchidos de uma vez ao prontuário. Nada é salvo; recarregar limpa tudo.</p>
+</header>
+<div class="disclaimer"><div><span>⚠️</span><div><b>Apoio à decisão clínica.</b> Não substitui o julgamento clínico, a entrevista nem os instrumentos validados em sua versão oficial. Equivalências farmacológicas são aproximadas e variam por fonte.</div></div></div>
+
+<div class="tabs" id="tabs">
+  <div class="inner moderow">
+    <button class="mtab active" data-mode="escores">📋 Escores</button>
+    <button class="mtab" data-mode="guia">💊 Guia rápido</button>
+    <span class="acts"><button onclick="window.print()">Imprimir</button></span>
+  </div>
+  <div class="inner subnav" id="subEscores">
+    <button class="tab active" data-cat="all">Todos</button>
+    <button class="tab" data-cat="risco">Risco</button>
+    <button class="tab" data-cat="abst">Abstinência</button>
+    <button class="tab" data-cat="delirium">Delirium</button>
+    <button class="tab" data-cat="eps">EPS / Antipsicóticos</button>
+    <button class="tab" data-cat="humor">Humor / Ansiedade</button>
+    <button class="tab" data-cat="subst">Substâncias</button>
+    <button class="tab" data-cat="calc">Calculadoras</button>
+    <span class="search">
+      <svg viewBox="0 0 24 24" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="search" type="text" placeholder="Buscar escala…" autocomplete="off">
+    </span>
+    <button id="clearall" class="gbtn">Limpar tudo</button>
+  </div>
+  <div class="inner subnav" id="subGuia" hidden>
+    <a class="tab" href="#g1">01 · Antidepressivos</a>
+    <a class="tab" href="#g2">02 · Antipsicóticos</a>
+    <a class="tab" href="#g3">03 · Estabilizadores</a>
+    <a class="tab" href="#g4">04 · Ansiolíticos</a>
+    <a class="tab" href="#g5">05 · Substâncias</a>
+    <a class="tab" href="#g6">06 · TDAH</a>
+    <a class="tab" href="#g7">07 · Adversos</a>
+    <a class="tab" href="#g8">08 · Escalonamento</a>
+    <a class="tab" href="#g9">09 · Combinações</a>
+    <span class="search">
+      <svg viewBox="0 0 24 24" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="guidesearch" type="text" placeholder="Buscar fármaco…" autocomplete="off">
+    </span>
+    <span class="guidecount" id="guidecount"></span>
+  </div>
+</div>
+
+<main id="grid"><div class="noresults" id="noresults">Nenhuma escala encontrada.</div></main>
+
+<main id="guide" hidden>
+  <section id="g1">
+    <h2 class="ghead"><span class="idx">01</span>Antidepressivos</h2>
+    <p class="lead"><b>Escalonamento geral:</b> iniciar baixo (sobretudo em ansiedade/pânico — risco de piora inicial), aguardar resposta em 2–4 semanas antes de ajustar; latência plena em 4–6 semanas. Manter ≥6–12 meses após remissão. <b>Retirada gradual</b> (descontinuação: paroxetina, venlafaxina). Atenção à <b>virada maníaca</b> em bipolares.</p>
+    <h3>1.1 ISRS</h3>
+    <div class="tablecard"><table><thead><tr><th>Fármaco</th><th>Dose inicial</th><th>Titulação</th><th>Usual / máx</th><th>Notas-chave</th></tr></thead><tbody>
+      <tr><td>Sertralina</td><td class="dose">50 mg (25 pânico)</td><td>↑ 50 mg / 1–2 sem</td><td class="dose">50–200 / 200</td><td>1ª linha, perfil seguro; GI inicial</td></tr>
+      <tr><td>Escitalopram</td><td class="dose">10 mg</td><td>↑ 20 mg após 2–4 sem</td><td class="dose">10–20 / 20</td><td>Poucas interações; <b>QTc</b> dose-dependente; idoso 10</td></tr>
+      <tr><td>Fluoxetina</td><td class="dose">20 mg</td><td>↑ após 3–4 sem</td><td class="dose">20–80 / 80</td><td>Meia-vida longa (menos descontinuação); ativadora</td></tr>
+      <tr><td>Paroxetina</td><td class="dose">20 mg</td><td>↑ 10 mg / sem</td><td class="dose">20–50 / 60</td><td>Anticolinérgica, ganho de peso, <b>descontinuação intensa</b></td></tr>
+      <tr><td>Citalopram</td><td class="dose">20 mg</td><td>↑ 40 mg</td><td class="dose">20–40 / 40</td><td><b>Cuidado QTc</b>; idoso máx 20</td></tr>
+      <tr><td>Fluvoxamina</td><td class="dose">50 mg</td><td>↑ 50 mg / sem</td><td class="dose">100–300 / 300</td><td>TOC; muitas interações (CYP1A2)</td></tr>
+    </tbody></table></div>
+    <div class="call info"><span class="t">Indicações</span>Depressão, TAG, pânico, TOC (doses mais altas), TEPT, fobia social, bulimia (fluoxetina). <b>Adversos:</b> GI, disfunção sexual, insônia/sonolência, hiponatremia (idoso), risco de sangramento (+AINE/anticoagulante), síndrome serotoninérgica.</div>
+    <h3>1.2 IRSN (duais)</h3>
+    <div class="tablecard"><table><thead><tr><th>Fármaco</th><th>Dose inicial</th><th>Titulação</th><th>Usual / máx</th><th>Notas</th></tr></thead><tbody>
+      <tr><td>Venlafaxina XR</td><td class="dose">75 mg (37,5)</td><td>↑ 75 mg / ≥4 dias</td><td class="dose">75–225 / 375</td><td><b>HAS</b> dose-dependente; descontinuação intensa</td></tr>
+      <tr><td>Desvenlafaxina</td><td class="dose">50 mg</td><td>habitual fixa</td><td class="dose">50–100 / 100</td><td>Pouca metabolização CYP</td></tr>
+      <tr><td>Duloxetina</td><td class="dose">30–60 mg</td><td>↑ 60 após 1–2 sem</td><td class="dose">60 / 120</td><td>Dor neuropática, fibromialgia; evitar em hepatopatia</td></tr>
+    </tbody></table></div>
+    <h3>1.3 Outros mecanismos</h3>
+    <div class="tablecard"><table><thead><tr><th>Fármaco</th><th>Dose inicial</th><th>Titulação</th><th>Usual / máx</th><th>Notas</th></tr></thead><tbody>
+      <tr><td>Bupropiona XL</td><td class="dose">150 mg manhã</td><td>↑ 300 após 1 sem</td><td class="dose">300 / 450</td><td>NDRI; ativadora, tabagismo; <b>↓ limiar convulsivo</b> (evitar epilepsia, bulimia/anorexia, abstinência alcoólica); sem disfunção sexual</td></tr>
+      <tr><td>Mirtazapina</td><td class="dose">15 mg noite</td><td>↑ 30–45</td><td class="dose">15–45 / 45</td><td>Sedação e apetite (insônia/anorexia); dose baixa mais sedativa</td></tr>
+      <tr><td>Trazodona</td><td class="dose">25–50 mg</td><td>conforme alvo</td><td class="dose">hipn. 25–100; antidep. 150–300 / 600</td><td>Sedativa; risco de priapismo</td></tr>
+      <tr><td>Vortioxetina</td><td class="dose">5–10 mg</td><td>↑ 20</td><td class="dose">10–20 / 20</td><td>Perfil cognitivo; náusea</td></tr>
+      <tr><td>Agomelatina</td><td class="dose">25 mg noite</td><td>↑ 50</td><td class="dose">25–50 / 50</td><td><b>Monitorar transaminases</b>; melhora sono</td></tr>
+    </tbody></table></div>
+    <h3>1.4 Tricíclicos · 1.5 IMAO</h3>
+    <div class="tablecard"><table><thead><tr><th>Fármaco</th><th>Dose</th><th>Notas</th></tr></thead><tbody>
+      <tr><td>Amitriptilina / Nortriptilina / Imipramina</td><td class="dose">25 mg → 75–150 (máx 300)</td><td><b>Cardiotóxicos em overdose</b>, anticolinérgicos, hipotensão ortostática; ECG</td></tr>
+      <tr><td>Clomipramina</td><td class="dose">25 mg → 100–250 / 250</td><td>1ª linha em TOC (tricíclico)</td></tr>
+      <tr><td>Tranilcipromina / Fenelzina (IMAO)</td><td class="dose">especializado</td><td><b>Dieta pobre em tiramina</b> (crise hipertensiva); <i>washout</i> de ISRS (≥2 sem; fluoxetina 5 sem)</td></tr>
+    </tbody></table></div>
+  </section>
+
+  <section id="g2">
+    <h2 class="ghead"><span class="idx">02</span>Antipsicóticos</h2>
+    <p class="lead"><b>Escalonamento:</b> na psicose aguda titular conforme tolerância (sedação, EPS, hipotensão); na mania, doses maiores e mais rápidas. Monitorar <b>síndrome metabólica</b> (peso, glicemia, lipídios — sobretudo olanzapina/clozapina/quetiapina), <b>QTc</b> e <b>EPS / discinesia tardia</b> (mais com típicos e risperidona).</p>
+    <h3>2.1 Segunda geração (atípicos)</h3>
+    <div class="tablecard"><table><thead><tr><th>Fármaco</th><th>Dose inicial</th><th>Titulação</th><th>Usual / máx</th><th>Notas-chave</th></tr></thead><tbody>
+      <tr><td>Risperidona</td><td class="dose">1–2 mg</td><td>↑ 1–2 mg / 1–2 dias</td><td class="dose">2–6 / 8</td><td>EPS e prolactina dose-dependentes; LAI disponível</td></tr>
+      <tr><td>Olanzapina</td><td class="dose">5–10 mg</td><td>↑ 5 mg</td><td class="dose">10–20 / 20</td><td>Muito metabólica; sedativa; eficaz</td></tr>
+      <tr><td>Quetiapina</td><td class="dose">25–50 mg</td><td>↑ rápido</td><td class="dose">psicose 400–800; dep. bip. 300 / 800</td><td>Sedativa; pouca EPS</td></tr>
+      <tr><td>Aripiprazol</td><td class="dose">10–15 mg</td><td>↑ após ≥2 sem</td><td class="dose">10–30 / 30</td><td>Agonista parcial D2; ativador, acatisia; metabolicamente leve</td></tr>
+      <tr><td>Ziprasidona</td><td class="dose">40 mg 2x</td><td>↑</td><td class="dose">80–160 / 160</td><td><b>Com alimento</b> (absorção); QTc</td></tr>
+      <tr><td>Paliperidona</td><td class="dose">6 mg</td><td>↑ 3 mg</td><td class="dose">3–12 / 12</td><td>Metabólito da risperidona; LAI mensal/trimestral</td></tr>
+      <tr><td>Lurasidona</td><td class="dose">40 mg</td><td>↑</td><td class="dose">40–160 / 160</td><td><b>Com refeição ≥350 kcal</b>; bom perfil metabólico</td></tr>
+      <tr><td>Clozapina</td><td class="dose">12,5 mg</td><td>lenta (~25–50 mg/dia)</td><td class="dose">300–450 / 900</td><td><b>Refratariedade; hemograma obrigatório</b> (agranulocitose), miocardite, convulsão, sialorreia, íleo</td></tr>
+    </tbody></table></div>
+    <h3>2.2 Primeira geração (típicos)</h3>
+    <div class="tablecard"><table><thead><tr><th>Fármaco</th><th>Dose</th><th>Notas</th></tr></thead><tbody>
+      <tr><td>Haloperidol</td><td class="dose">VO 1–5 (até 20); agitação IM 2,5–5</td><td>Alta potência: muita EPS, pouca sedação; LAI decanoato</td></tr>
+      <tr><td>Clorpromazina</td><td class="dose">25–100 (até 800)</td><td>Baixa potência: sedação, hipotensão, anticolinérgico</td></tr>
+      <tr><td>Levomepromazina</td><td class="dose">sedativo</td><td>Agitação / cuidados paliativos</td></tr>
+    </tbody></table></div>
+    <div class="call warn"><span class="t">Agitação psicomotora (emergência)</span>Haloperidol ± midazolam/prometazina IM, ou antipsicótico atípico. Vigiar via aérea, QTc e EPS.</div>
+  </section>
+
+  <section id="g3">
+    <h2 class="ghead"><span class="idx">03</span>Estabilizadores de humor</h2>
+    <div class="tablecard"><table><thead><tr><th>Fármaco</th><th>Início</th><th>Alvo (nível sérico)</th><th>Monitorização / notas</th></tr></thead><tbody>
+      <tr><td>Lítio</td><td class="dose">300 mg → por litemia</td><td class="dose">0,8–1,2 (agudo) · 0,6–0,8 (manut.)</td><td>Litemia 5 dias após ajuste; <b>função renal e TSH</b>; janela estreita; tremor, poliúria, hipotireoidismo; <b>toxicidade &gt;1,5</b>; efeito antissuicídio</td></tr>
+      <tr><td>Valproato / Divalproato</td><td class="dose">250–500 mg (~20–30 mg/kg)</td><td class="dose">50–125 µg/mL</td><td>Hepatotoxicidade, plaquetopenia, <b>teratogênico (evitar em mulheres em idade fértil)</b>; ganho de peso</td></tr>
+      <tr><td>Carbamazepina</td><td class="dose">200 mg → ↑ 200</td><td class="dose">4–12 µg/mL</td><td><b>Indutor enzimático</b> (↓ contraceptivos); hiponatremia, discrasias; <b>HLA-B*1502 → SJS</b></td></tr>
+      <tr><td>Lamotrigina</td><td class="dose">25 mg/dia (titulação lenta)</td><td class="dose">clínica (sem nível)</td><td>Depressão bipolar; <b>risco de Stevens-Johnson → não acelerar</b></td></tr>
+    </tbody></table></div>
+    <div class="call danger"><span class="t">Titulação da lamotrigina — memorizar (segurança)</span>25 mg/dia × 2 sem → 50 mg/dia × 2 sem → 100 mg/dia × 1 sem → 200 mg/dia.<br><b>Com valproato</b> (inibe): <b>metade</b> (iniciar 25 mg em dias alternados). <b>Com indutor</b> (carbamazepina): <b>dobro</b>. Reiniciar a titulação se interrupção &gt;5 dias.</div>
+  </section>
+
+  <section id="g4">
+    <h2 class="ghead"><span class="idx">04</span>Ansiolíticos e hipnóticos</h2>
+    <h3>4.1 Benzodiazepínicos</h3>
+    <div class="tablecard"><table><thead><tr><th>Fármaco</th><th>Equiv. aprox.</th><th>Meia-vida</th><th>Uso típico</th></tr></thead><tbody>
+      <tr><td>Diazepam</td><td class="dose">5 mg</td><td>longa (início rápido)</td><td>Abstinência alcoólica, ansiedade aguda, convulsão</td></tr>
+      <tr><td>Clonazepam</td><td class="dose">0,5 mg</td><td>longa</td><td>Pânico, ansiedade</td></tr>
+      <tr><td>Lorazepam</td><td class="dose">1 mg</td><td>média — <b>sem metabólito hepático ativo</b></td><td>Idoso / hepatopata, abstinência</td></tr>
+      <tr><td>Alprazolam</td><td class="dose">0,5 mg</td><td>curta (início rápido)</td><td>Pânico — <b>alto potencial de dependência</b></td></tr>
+    </tbody></table></div>
+    <div class="call warn"><span class="t">Princípios</span>Menor tempo possível (ideal &lt;2–4 sem); <b>dependência, tolerância e abstinência</b> (inclui convulsão); sedação, quedas no idoso, depressão respiratória (+opioide/álcool). Retirada gradual.</div>
+    <h3>4.2 Não-benzodiazepínicos</h3>
+    <div class="tablecard"><table><thead><tr><th>Fármaco</th><th>Dose</th><th>Notas</th></tr></thead><tbody>
+      <tr><td>Zolpidem</td><td class="dose">5–10 mg noite</td><td>Z-drug; comportamentos do sono, dependência</td></tr>
+      <tr><td>Buspirona</td><td class="dose">7,5 mg 2x → 15–30 / 60</td><td>TAG; <b>sem dependência</b>; latência de semanas; não serve "se necessário"</td></tr>
+    </tbody></table></div>
+  </section>
+
+  <section id="g5">
+    <h2 class="ghead"><span class="idx">05</span>Transtorno por uso de substâncias</h2>
+    <div class="call info"><span class="t">Abstinência alcoólica</span><b>Benzodiazepínico guiado por CIWA-Ar</b> (diazepam; lorazepam no hepatopata/idoso), sintomático ou dose fixa com desmame. <b>Tiamina 300 mg/dia antes de glicose</b> (profilaxia de Wernicke); repor <b>magnésio</b>.</div>
+    <h3>Manutenção / anticraving</h3>
+    <div class="tablecard"><table><thead><tr><th>Fármaco</th><th>Dose</th><th>Indicação</th><th>Notas</th></tr></thead><tbody>
+      <tr><td>Naltrexona</td><td class="dose">50 mg/dia VO (ou 380 mg IM/mês)</td><td>Álcool e opioides</td><td>Antagonista opioide — <b>exige 7–10 dias sem opioide</b> (abstinência precipitada); checar hepático</td></tr>
+      <tr><td>Acamprosato</td><td class="dose">666 mg 3x/dia</td><td>Álcool</td><td>Ajustar na insuficiência renal; bom em manutenção</td></tr>
+      <tr><td>Dissulfiram</td><td class="dose">250 mg/dia</td><td>Álcool (aversivo)</td><td>Reação se ingestão de álcool; exige adesão e abstinência prévia</td></tr>
+      <tr><td>Buprenorfina/naloxona · Metadona</td><td class="dose">programas regulamentados</td><td>Opioides (substituição)</td><td>Iniciar buprenorfina em abstinência leve-moderada (COWS) p/ evitar precipitação</td></tr>
+    </tbody></table></div>
+    <h3>Tabagismo</h3>
+    <div class="tablecard"><table><thead><tr><th>Fármaco</th><th>Dose</th><th>Notas</th></tr></thead><tbody>
+      <tr><td>Vareniclina</td><td class="dose">0,5 mg → 0,5 mg 2x → 1 mg 2x</td><td>Agonista parcial nicotínico; iniciar 1–2 sem antes de parar</td></tr>
+      <tr><td>Bupropiona</td><td class="dose">150 → 300 mg</td><td><b>↓ limiar convulsivo</b></td></tr>
+      <tr><td>Reposição de nicotina</td><td class="dose">adesivo / goma / pastilha</td><td>Combinável</td></tr>
+    </tbody></table></div>
+  </section>
+
+  <section id="g6">
+    <h2 class="ghead"><span class="idx">06</span>Estimulantes e TDAH</h2>
+    <div class="tablecard"><table><thead><tr><th>Fármaco</th><th>Início</th><th>Titulação</th><th>Usual / máx</th><th>Notas</th></tr></thead><tbody>
+      <tr><td>Metilfenidato IR</td><td class="dose">5–10 mg</td><td>↑ semanal</td><td class="dose">conforme resposta</td><td>Curta ação (3–4h)</td></tr>
+      <tr><td>Metilfenidato LA/OROS</td><td class="dose">18–20 mg</td><td>↑ semanal</td><td class="dose">até ~54–72 mg</td><td>Ação prolongada</td></tr>
+      <tr><td>Lisdexanfetamina</td><td class="dose">30 mg</td><td>↑ 10–20 mg / sem</td><td class="dose">30–70 / 70</td><td>Pró-fármaco, menor abuso</td></tr>
+      <tr><td>Atomoxetina</td><td class="dose">40 mg</td><td>↑ 80 após 1 sem</td><td class="dose">80–100</td><td><b>Não-estimulante</b>, latência de semanas</td></tr>
+    </tbody></table></div>
+    <div class="call warn"><span class="t">Cuidados</span>Avaliação cardiovascular, PA/FC, peso/crescimento; potencial de abuso (estimulantes); insônia, anorexia.</div>
+  </section>
+
+  <section id="g7">
+    <h2 class="ghead"><span class="idx">07</span>Manejo de efeitos adversos-chave</h2>
+    <div class="tablecard"><table><thead><tr><th>Quadro</th><th>Conduta</th></tr></thead><tbody>
+      <tr><td>Distonia aguda / parkinsonismo (EPS)</td><td><b>Biperideno</b> 2 mg VO/IM</td></tr>
+      <tr><td>Acatisia</td><td><b>Propranolol</b> 20–40 mg; reduzir antipsicótico / benzodiazepínico</td></tr>
+      <tr><td>Discinesia tardia</td><td>Revisar antipsicótico; inibidores de VMAT2</td></tr>
+      <tr><td>Síndrome neuroléptica maligna</td><td><b>Emergência</b> — suspender antipsicótico, suporte, <b>dantrolene / bromocriptina</b></td></tr>
+      <tr><td>Síndrome serotoninérgica</td><td>Suspender serotoninérgicos, suporte, <b>ciproeptadina</b></td></tr>
+      <tr><td>Síndrome de descontinuação (ISRS/IRSN)</td><td>Retirada gradual</td></tr>
+    </tbody></table></div>
+  </section>
+
+  <section id="g8">
+    <h2 class="ghead"><span class="idx">08</span>Princípios transversais de escalonamento</h2>
+    <ul class="clean">
+      <li><b>"Start low, go slow"</b> — sobretudo idoso, hepatopata, ansiedade e lamotrigina.</li>
+      <li>Respeitar a <b>latência terapêutica</b> antes de subir dose ou trocar.</li>
+      <li>Ajustar por <b>nível sérico</b> quando aplicável (lítio, valproato, carbamazepina).</li>
+      <li><b>Monitorização basal e periódica:</b> metabólica (antipsicóticos), renal/tireoide (lítio), hepática (valproato, agomelatina), hemograma (clozapina, carbamazepina), ECG/QTc quando indicado.</li>
+      <li><b>Retirada gradual</b> e atenção a interações (CYP, indutores/inibidores).</li>
+      <li>Reavaliar <b>risco de virada maníaca</b> (antidepressivo em bipolar) e <b>risco suicida</b> no início do tratamento.</li>
+    </ul>
+  </section>
+
+  <section id="g9">
+    <h2 class="ghead"><span class="idx">09</span>Combinações e potencialização</h2>
+    <p class="lead">Estratégias de <b>combinação</b> (dois fármacos com mecanismos complementares) e <b>potencialização/augmentation</b> (adicionar um agente que potencializa o principal). Antes de empilhar fármacos: confirmar adesão, otimizar a dose do atual, revisar o diagnóstico e checar interações (CYP).</p>
+    <div class="call warn"><span class="t">Checklist antes de combinar — "resistência" verdadeira</span>Antes de assumir depressão resistente (DRT), confirmar: <b>≥2 antidepressivos</b> em dose e tempo adequados (6–8 semanas cada) · <b>adesão</b> confirmada (a "resistência" mais comum é não tomar) · <b>diagnóstico revisto</b> (bipolaridade oculta, hipotireoidismo, uso de substâncias, causa orgânica) · <b>otimização</b> da dose atual tentada antes de adicionar o segundo fármaco.</div>
+    <h3>9.1 Depressão resistente — combinação de antidepressivos</h3>
+    <div class="tablecard"><table><thead><tr><th>Combinação</th><th>Doses</th><th>Observações</th></tr></thead><tbody>
+      <tr><td>Sertralina + Bupropiona</td><td class="dose">Sertralina 50–200 + Bupropiona XL 150–300 mg/dia</td><td>Bupropiona melhora energia e função sexual; ver alerta abaixo</td></tr>
+      <tr><td>Venlafaxina + Mirtazapina <em>("California Rocket Fuel")</em></td><td class="dose">Venlafaxina XR 75–225 + Mirtazapina 15–45 mg/noite</td><td>Bloqueio dual; bem tolerada na prática; atenção teórica à síndrome serotoninérgica</td></tr>
+      <tr><td>Escitalopram + Mirtazapina</td><td class="dose">Escitalopram 10–20 + Mirtazapina 15–45 mg/noite</td><td>Mirtazapina ajuda sono e apetite</td></tr>
+      <tr><td>ISRS/IRSN + Trazodona (dose baixa)</td><td class="dose">Trazodona 25–100 mg/noite</td><td>Adjuvante para insônia; cuidado com sedação/ortostase e priapismo</td></tr>
+    </tbody></table></div>
+    <div class="call danger"><span class="t">Bupropiona — alertas</span><b>Rebaixa o limiar convulsivo</b> → contraindicada em epilepsia e em transtornos alimentares (bulimia/anorexia) e na abstinência alcoólica. <b>Inibidor potente de CYP2D6</b> → eleva níveis de substratos 2D6 ao combinar.</div>
+    <h3>9.2 Depressão resistente — potencialização (augmentation)</h3>
+    <div class="tablecard"><table><thead><tr><th>Estratégia</th><th>Doses</th><th>Observações</th></tr></thead><tbody>
+      <tr><td>+ Aripiprazol</td><td class="dose">2,5–15 mg/dia (iniciar 2,5–5)</td><td><b>Melhor evidência</b> entre os atípicos; aprovado como adjuvante</td></tr>
+      <tr><td>+ Brexpiprazol / Cariprazina</td><td class="dose">conforme bula</td><td>Adjuvantes mais novos, também aprovados; perfil metabólico mais leve que olanzapina</td></tr>
+      <tr><td>+ Quetiapina XR</td><td class="dose">25–50 (sedação) · 150–300 (efeito antidepressivo)</td><td>Efeito real, mas 2ª linha atrás do aripiprazol pelo ônus metabólico</td></tr>
+      <tr><td>+ Lítio ⭐</td><td class="dose">600–900 mg/dia · litemia ~0,6–0,8</td><td>Augmentation com <b>mais evidência histórica</b>; efeito antissuicídio; exige litemia</td></tr>
+      <tr><td>+ T3 (liotironina) ⭐</td><td class="dose">25–50 mcg/dia</td><td>Clássica, barata, acelera resposta</td></tr>
+      <tr><td>OFC (Olanzapina + Fluoxetina) ⭐</td><td class="dose">Olanzapina 5–12,5 + Fluoxetina 20–50 mg</td><td>Aprovada para DRT e depressão bipolar</td></tr>
+    </tbody></table></div>
+    <div class="call info"><span class="t">Opção moderna</span><b>Escetamina intranasal / cetamina</b> — mudou o algoritmo de DRT; uso em serviço com monitorização (sedação, dissociação, PA). ⭐ = estratégias consolidadas que costumam faltar nas listas rápidas.</div>
+    <h3>9.3 Transtorno bipolar</h3>
+    <div class="tablecard"><table><thead><tr><th>Combinação</th><th>Doses</th><th>Observações</th></tr></thead><tbody>
+      <tr><td>Lítio + Quetiapina</td><td class="dose">Lítio 600–1200 + Quetiapina 200–800 mg/dia</td><td>Litemia + função renal/tireoidiana</td></tr>
+      <tr><td>Valproato + Olanzapina</td><td class="dose">Valproato 500–2000 + Olanzapina 5–20 mg/noite</td><td>Mania aguda; ver alerta do valproato</td></tr>
+      <tr><td>Lítio + Valproato</td><td class="dose">conforme níveis séricos</td><td>Dois estabilizadores na mania/ciclo refratário; somar monitorizações</td></tr>
+      <tr><td>Estabilizador + antipsicótico atípico</td><td class="dose">—</td><td>Padrão na <b>mania aguda grave</b> (lítio ou valproato + atípico)</td></tr>
+      <tr><td>Lamotrigina + Quetiapina</td><td class="dose">Lamotrigina 100–200 + Quetiapina 100–300 mg/noite</td><td>⚠️ Para <b>depressão bipolar e manutenção — NÃO para mania aguda</b>; titular lamotrigina lentamente</td></tr>
+    </tbody></table></div>
+    <div class="call danger"><span class="t">Valproato — alertas</span><b>Teratogenicidade alta</b> → evitar em mulheres em idade fértil sem contracepção confiável. <b>Interação crítica com lamotrigina:</b> valproato <b>dobra os níveis</b> de lamotrigina → titulação ainda mais lenta (iniciar 25 mg em dias alternados) e dose-alvo reduzida.</div>
+    <h3>9.4 Ansiedade e TOC <em>(farmacologias distintas — separar)</em></h3>
+    <p class="lead"><b>TAG:</b></p>
+    <div class="tablecard"><table><thead><tr><th>Estratégia</th><th>Doses</th><th>Observações</th></tr></thead><tbody>
+      <tr><td>Clonazepam + ISRS</td><td class="dose">Clonazepam 0,25–2 mg/dia</td><td><b>Apenas temporário</b> (cobrir o início do ISRS); risco de dependência</td></tr>
+      <tr><td>Pregabalina + ISRS</td><td class="dose">Pregabalina 75–600 mg/dia</td><td>Boa evidência em TAG</td></tr>
+      <tr><td>Buspirona + ISRS</td><td class="dose">Buspirona 15–60 mg/dia</td><td>Augmentation sem dependência; latência de semanas</td></tr>
+    </tbody></table></div>
+    <div class="call info"><span class="t">TOC — abordagem diferente</span><b>ISRS em dose alta</b> (sertralina até 200, escitalopram até 20, fluvoxamina até 300) · <b>trials longos</b> (10–12 semanas) · refratário → potencializar com <b>antipsicótico</b> (aripiprazol/risperidona) ou trocar para <b>clomipramina</b>. ❌ Benzodiazepínico e pregabalina <b>não</b> são estratégia para TOC.</div>
+    <h3>9.5 Psicose refratária</h3>
+    <div class="tablecard"><table><thead><tr><th>Combinação</th><th>Doses</th><th>Observações</th></tr></thead><tbody>
+      <tr><td>Clozapina + Aripiprazol</td><td class="dose">Clozapina 200–600 + Aripiprazol 5–15 mg/dia</td><td>Aripiprazol também <b>atenua o ganho metabólico</b> da clozapina; monitorização rigorosa</td></tr>
+    </tbody></table></div>
+    <div class="call info"><span class="t">Antes de combinar na psicose</span>Confirmar a <b>clozapina em dose/nível adequados</b> e por tempo suficiente — é o padrão-ouro na refratariedade. Alternativas de augmentation têm evidência mais fraca (ECT, amisulprida, lamotrigina).</div>
+    <h3>9.6 Combinações de alto risco — atenção ou evitar</h3>
+    <div class="tablecard"><table><thead><tr><th>Combinação</th><th>Risco</th><th>Conduta</th></tr></thead><tbody>
+      <tr><td>IMAO + serotoninérgico (ISRS/IRSN, tramadol, triptano, linezolida)</td><td><b>Síndrome serotoninérgica</b> grave</td><td>Respeitar <em>washout</em> ≥2 sem (fluoxetina 5 sem)</td></tr>
+      <tr><td>Múltiplos serotoninérgicos em dose alta</td><td>Risco serotoninérgico aditivo</td><td>Vigiar clônus, hipertermia, agitação</td></tr>
+      <tr><td>Benzodiazepínico/opioide + álcool</td><td>Depressão respiratória</td><td>Evitar associação; cautela no desmame</td></tr>
+      <tr><td>Fármacos que prolongam QT (antipsicótico + metadona + outros)</td><td><b>Torsades de pointes</b></td><td>Monitorar QTc; corrigir K⁺/Mg²⁺</td></tr>
+      <tr><td>Clozapina + benzodiazepínico (sobretudo EV)</td><td>Parada respiratória / colapso</td><td>Cautela; evitar associação aguda</td></tr>
+      <tr><td>Bupropiona em transtorno alimentar / epilepsia</td><td>Convulsão</td><td>Contraindicada</td></tr>
+    </tbody></table></div>
+    <h3>9.7 Interações de CYP que mais importam</h3>
+    <div class="tablecard"><table><thead><tr><th>Agente</th><th>Efeito</th><th>Consequência prática</th></tr></thead><tbody>
+      <tr><td>Fluoxetina, Paroxetina, Bupropiona</td><td>Inibem <b>CYP2D6</b></td><td>↑ níveis de substratos 2D6 (alguns antipsicóticos, tricíclicos, betabloqueadores)</td></tr>
+      <tr><td>Fluvoxamina</td><td>Inibe <b>CYP1A2</b></td><td>↑ níveis de clozapina e olanzapina</td></tr>
+      <tr><td>Carbamazepina</td><td><b>Indutor</b> enzimático</td><td>↓ níveis (contraceptivos, lamotrigina, outros) — pode exigir dose maior</td></tr>
+      <tr><td>Valproato</td><td>Inibe glucuronidação</td><td>↑ níveis de lamotrigina (dobra) → titulação reduzida</td></tr>
+    </tbody></table></div>
+    <h3>9.8 Monitorização essencial das combinações</h3>
+    <div class="tablecard"><table><thead><tr><th>Fármaco</th><th>Monitorar</th></tr></thead><tbody>
+      <tr><td>Clozapina</td><td>Hemograma / ANC seriado (neutrófilos); miocardite; QTc</td></tr>
+      <tr><td>Lítio</td><td>Litemia + função renal + tireoidiana</td></tr>
+      <tr><td>Valproato</td><td>Níveis séricos + transaminases + plaquetas</td></tr>
+      <tr><td>Atípicos (quetiapina, olanzapina, etc.)</td><td>Perfil metabólico: peso, glicemia, lipídios</td></tr>
+      <tr><td>Lamotrigina</td><td>Rash cutâneo (Stevens-Johnson), sobretudo com valproato</td></tr>
+      <tr><td>Combinações que prolongam QT</td><td>ECG/QTc basal e seriado</td></tr>
+    </tbody></table></div>
+  </section>
+  <div class="guidenote" id="guidenote">Nenhum fármaco encontrado.</div>
+</main>
+
+<footer>Versões de trabalho para uso à beira-leito · confirmar condutas conforme protocolo do serviço, bula e julgamento clínico.</footer>
+
+<div class="sumpanel" id="sumpanel"><div class="pw">
+  <h3>Resumo dos escores</h3>
+  <div class="date" id="sumdate"></div>
+  <div class="sumlist" id="sumlist"></div>
+  <div class="sumpreview" id="sumpreview"></div>
+</div></div>
+<div class="sumbar" id="sumbar">
+  <div class="suminfo">📋 <b id="sumcount">0</b> escore(s) preenchido(s)</div>
+  <div class="sumactions">
+    <button id="sumToggle">Ver resumo</button>
+    <button id="sumCopy" class="primary">⧉ Copiar resumo</button>
+  </div>
+</div>
+
+<script>
+/* ---------- helpers para opções ---------- */
+function uni(n){var a=[];for(var i=0;i<=n;i++)a.push([i, i+(i===0?' — ausente':'')]);return a;}
+function ciwa(anchors){var a=[];for(var i=0;i<=7;i++){a.push([i, anchors[i]?(i+' — '+anchors[i]):String(i)]);}return a;}
+var YN=[[0,'Não'],[1,'Sim']];
+var SEV4=[[0,'0 — nenhum'],[1,'1 — mínimo'],[2,'2 — leve'],[3,'3 — moderado'],[4,'4 — grave']];
+var FREQ=[[0,'Nunca'],[1,'< 1x/mês'],[2,'Mensal'],[3,'Semanal'],[4,'Diário/quase']];
+var P03=[[0,'0 — Nenhuma vez'],[1,'1 — Vários dias'],[2,'2 — > metade dos dias'],[3,'3 — Quase todos os dias']];
+
+/* ---------- definição das escalas ---------- */
+var SCALES=[
+/* ====== RISCO ====== */
+{id:'cssrs',cat:'risco',catLabel:'Risco de suicídio',name:'C-SSRS — Triagem',desc:'Columbia. Estratifica ideação e comportamento (referência: último mês; comportamento na vida/3 meses).',type:'cssrs',
+ items:[
+  {q:'1',label:'Desejou estar morto ou poder dormir e não acordar?',opts:YN},
+  {q:'2',label:'Teve pensamentos de se matar?',opts:YN},
+  {q:'3',label:'Pensou em COMO faria (algum método), sem plano nem intenção de agir?',opts:YN},
+  {q:'4',label:'Teve alguma INTENÇÃO de agir nesses pensamentos?',opts:YN},
+  {q:'5',label:'Tem detalhes de um PLANO e intenção de executá-lo?',opts:YN},
+  {q:'6',label:'COMPORTAMENTO (na vida): já fez, começou ou se preparou para acabar com a própria vida?',opts:YN},
+  {q:'7',label:'COMPORTAMENTO (últimos 3 meses): isso ocorreu recentemente?',opts:YN}
+ ],
+ foot:'Classificação categórica, pelo item afirmativo de maior gravidade (não é somado). Comportamento recente (≤3 meses) ou plano/intenção → risco alto; comportamento apenas remoto (>3 meses) sem ideação atual de risco → risco moderado.'},
+
+{id:'bvc',cat:'risco',catLabel:'Risco de violência',name:'Brøset Violence Checklist',desc:'Prevê agressão nas próximas 24h. Marcar comportamento presente/ausente.',type:'sum',
+ items:[
+  {q:'1',label:'Confuso',opts:YN},{q:'2',label:'Irritável',opts:YN},
+  {q:'3',label:'Barulhento / agitação verbal',opts:YN},{q:'4',label:'Ameaça verbal',opts:YN},
+  {q:'5',label:'Ameaça física',opts:YN},{q:'6',label:'Ataca objetos',opts:YN}
+ ],
+ bands:[[0,0,'Risco baixo — observação de rotina','ok'],[1,2,'Risco moderado — medidas preventivas','mod'],[3,6,'Risco alto — medidas imediatas','sev']],
+ foot:'Máx. 6. Reavaliar a cada plantão em pacientes de risco.'},
+
+/* ====== ABSTINÊNCIA ====== */
+{id:'ciwa',cat:'abst',catLabel:'Abstinência alcoólica',name:'CIWA-Ar',desc:'Gravidade da abstinência alcoólica. Guia o desmame de benzodiazepínico.',type:'sum',
+ items:[
+  {q:'1',label:'Náusea / vômitos',opts:ciwa({0:'ausente',1:'náusea leve, sem vômito',4:'náusea intermitente com ânsia',7:'náusea constante, ânsias e vômitos'})},
+  {q:'2',label:'Tremor',opts:ciwa({0:'ausente',1:'não visível, sentido na ponta dos dedos',4:'moderado, braços estendidos',7:'grave, mesmo sem estender os braços'})},
+  {q:'3',label:'Sudorese paroxística',opts:ciwa({0:'ausente',1:'palmas úmidas',4:'gotas de suor na testa',7:'sudorese profusa'})},
+  {q:'4',label:'Ansiedade',opts:ciwa({0:'ausente, à vontade',1:'levemente ansioso',4:'moderada / guardado',7:'equivalente a pânico agudo'})},
+  {q:'5',label:'Agitação',opts:ciwa({0:'atividade normal',1:'um pouco mais que o normal',4:'inquieto, irrequieto',7:'anda de um lado a outro, debate-se'})},
+  {q:'6',label:'Distúrbios táteis',opts:ciwa({0:'ausente',1:'prurido/formigamento muito leve',4:'alucinações moderadas',7:'alucinações contínuas'})},
+  {q:'7',label:'Distúrbios auditivos',opts:ciwa({0:'ausente',1:'aspereza muito leve',4:'alucinações moderadas',7:'alucinações contínuas'})},
+  {q:'8',label:'Distúrbios visuais',opts:ciwa({0:'ausente',1:'sensibilidade muito leve à luz',4:'alucinações moderadas',7:'alucinações contínuas'})},
+  {q:'9',label:'Cefaleia / peso na cabeça',opts:ciwa({0:'ausente',1:'muito leve',4:'moderada',7:'extremamente intensa'})},
+  {q:'10',label:'Orientação / sensório',opts:[[0,'0 — orientado, faz somas seriadas'],[1,'1 — não faz somas / incerto quanto à data'],[2,'2 — desorientado data ≤2 dias'],[3,'3 — desorientado data >2 dias'],[4,'4 — desorientado lugar/pessoa']]}
+ ],
+ bands:[[0,9,'Mínima / ausente — sintomático se ≥8–10','ok'],[10,15,'Leve a moderada','mild'],[16,20,'Moderada a grave — tratar','mod'],[21,67,'Grave — risco de convulsão / delirium tremens','sev']],
+ foot:'Máx. 67. Limiar usual de tratamento ≥8–10. Reavaliar de forma seriada e ajustar BZD pela tendência.'},
+
+{id:'cows',cat:'abst',catLabel:'Abstinência de opioides',name:'COWS',desc:'Gravidade da abstinência de opioides. Orienta o início seguro de buprenorfina.',type:'sum',
+ items:[
+  {q:'1',label:'FC em repouso',opts:[[0,'0 — ≤80'],[1,'1 — 81–100'],[2,'2 — 101–120'],[4,'4 — >120']]},
+  {q:'2',label:'Sudorese',opts:[[0,'0 — ausente'],[1,'1 — relato subjetivo'],[2,'2 — face ruborizada/úmida'],[3,'3 — gotas na testa'],[4,'4 — suor escorrendo']]},
+  {q:'3',label:'Inquietação',opts:[[0,'0 — fica parado'],[1,'1 — dificuldade, mas consegue'],[3,'3 — mexe-se com frequência'],[5,'5 — não fica parado']]},
+  {q:'4',label:'Pupilas',opts:[[0,'0 — normais/mióticas'],[1,'1 — possivelmente maiores'],[2,'2 — moderadamente dilatadas'],[5,'5 — só a borda da íris visível']]},
+  {q:'5',label:'Dores ósseas/articulares',opts:[[0,'0 — ausente'],[1,'1 — leve difusa'],[2,'2 — aching difuso intenso'],[4,'4 — esfrega/não fica parado']]},
+  {q:'6',label:'Coriza / lacrimejamento',opts:[[0,'0 — ausente'],[1,'1 — congestão nasal / olhos úmidos'],[4,'4 — nariz escorrendo constantemente / lágrimas escorrendo']]},
+  {q:'7',label:'Sintomas GI',opts:[[0,'0 — ausente'],[1,'1 — cólicas'],[2,'2 — náusea/fezes amolecidas'],[3,'3 — vômito/diarreia'],[5,'5 — múltiplos episódios']]},
+  {q:'8',label:'Tremor',opts:[[0,'0 — ausente'],[1,'1 — sentido, não observado'],[2,'2 — leve observável'],[4,'4 — grosseiro/fasciculações']]},
+  {q:'9',label:'Bocejos',opts:[[0,'0 — ausente'],[1,'1 — 1–2x'],[2,'2 — ≥3x'],[4,'4 — várias vezes/min']]},
+  {q:'10',label:'Ansiedade / irritabilidade',opts:[[0,'0 — ausente'],[1,'1 — relato leve'],[2,'2 — evidente'],[4,'4 — atrapalha a avaliação']]},
+  {q:'11',label:'Pele arrepiada',opts:[[0,'0 — lisa'],[3,'3 — piloereção palpável'],[5,'5 — piloereção proeminente']]}
+ ],
+ bands:[[0,4,'Ausente','ok'],[5,12,'Leve','mild'],[13,24,'Moderada','mod'],[25,36,'Moderada a grave','sev'],[37,48,'Grave','sev']],
+ foot:'Máx. 48. Iniciar buprenorfina geralmente com COWS ≥8–12 para evitar abstinência precipitada.'},
+
+/* ====== DELIRIUM ====== */
+{id:'cam',cat:'delirium',catLabel:'Delirium',name:'CAM',desc:'Confusion Assessment Method. Diferencia delirium (causa orgânica) de quadro psiquiátrico.',type:'cam',
+ items:[
+  {q:'1',label:'Início agudo e curso flutuante (mudança aguda do basal; flutua no dia)',opts:YN},
+  {q:'2',label:'Desatenção (dificuldade em focar/sustentar a atenção)',opts:YN},
+  {q:'3',label:'Pensamento desorganizado (discurso desconexo, ilógico)',opts:YN},
+  {q:'4',label:'Alteração do nível de consciência (≠ alerta: vigilante, letárgico, estupor)',opts:YN}
+ ],
+ foot:'Delirium provável = (1 E 2) E (3 OU 4). Sempre buscar causa orgânica subjacente.'},
+
+/* ====== EPS ====== */
+{id:'aims',cat:'eps',catLabel:'Discinesia tardia',name:'AIMS (movimentos)',desc:'Abnormal Involuntary Movement Scale — itens 1–7 (orofacial, extremidades, tronco).',type:'aims',
+ items:[
+  {q:'1',label:'Expressão facial',opts:SEV4},{q:'2',label:'Lábios / perioral',opts:SEV4},
+  {q:'3',label:'Mandíbula',opts:SEV4},{q:'4',label:'Língua',opts:SEV4},
+  {q:'5',label:'Extremidades superiores',opts:SEV4},{q:'6',label:'Extremidades inferiores',opts:SEV4},
+  {q:'7',label:'Tronco (pescoço/ombros/quadril)',opts:SEV4}
+ ],
+ foot:'Soma dos itens 1–7 = gravidade (0–28). Positividade pelo critério de Schooler-Kane: ≥3 (moderado/grave) em UMA área OU ≥2 (leve) em DUAS ou mais áreas — os itens não são somados para definir positividade. Monitorar periodicamente quem usa antipsicótico.'},
+
+{id:'barnes',cat:'eps',catLabel:'Acatisia',name:'Barnes (BARS)',desc:'Barnes Akathisia Rating Scale. A avaliação global ancora o diagnóstico.',type:'last',
+ items:[
+  {q:'1',label:'Acatisia objetiva',opts:[[0,'0 — ausente'],[1,'1 — inquietação < ½ tempo'],[2,'2 — ≥ ½ tempo'],[3,'3 — movimento constante']]},
+  {q:'2',label:'Consciência subjetiva de inquietação',opts:[[0,'0 — nenhuma'],[1,'1 — inespecífica'],[2,'2 — incapacidade de manter pernas paradas'],[3,'3 — forte desejo de mover-se']]},
+  {q:'3',label:'Angústia subjetiva pela inquietação',opts:[[0,'0 — nenhuma'],[1,'1 — leve'],[2,'2 — moderada'],[3,'3 — grave']]},
+  {q:'4',label:'Avaliação clínica global',opts:[[0,'0 — ausente'],[1,'1 — questionável/pseudoacatisia'],[2,'2 — leve'],[3,'3 — moderada'],[4,'4 — marcada'],[5,'5 — grave']]}
+ ],
+ bands:[[0,1,'Ausente / questionável','ok'],[2,2,'Acatisia leve','mild'],[3,3,'Acatisia moderada','mod'],[4,5,'Acatisia marcada a grave','sev']],
+ foot:'Pontuação pela avaliação global (item 4). Conduta: reduzir antipsicótico, propranolol; revisar diagnóstico.'},
+
+{id:'sas',cat:'eps',catLabel:'Parkinsonismo',name:'Simpson-Angus (SAS)',desc:'Sintomas extrapiramidais / parkinsonismo induzido por antipsicótico.',type:'sas',
+ items:[
+  {q:'1',label:'Marcha',opts:uni(4)},{q:'2',label:'Queda dos braços',opts:uni(4)},
+  {q:'3',label:'Balançar dos ombros',opts:uni(4)},{q:'4',label:'Rigidez do cotovelo',opts:uni(4)},
+  {q:'5',label:'Rigidez do punho',opts:uni(4)},{q:'6',label:'Pêndulo das pernas',opts:uni(4)},
+  {q:'7',label:'Queda da cabeça',opts:uni(4)},{q:'8',label:'Reflexo glabelar',opts:uni(4)},
+  {q:'9',label:'Tremor',opts:uni(4)},{q:'10',label:'Salivação',opts:uni(4)}
+ ],
+ bands:[[0,3,'Sem parkinsonismo significativo','ok'],[4,40,'Parkinsonismo / EPS presente','mod']],
+ foot:'Média = total/10. Ponto de corte usual: média > 0,3 (≈ total > 3) indica parkinsonismo.'},
+
+/* ====== HUMOR / ANSIEDADE ====== */
+{id:'phq9',cat:'humor',catLabel:'Depressão',name:'PHQ-9',desc:'Gravidade de sintomas depressivos nas últimas 2 semanas.',type:'sum',
+ items:[
+  {q:'1',label:'Pouco interesse ou prazer em fazer as coisas',opts:P03},
+  {q:'2',label:'Sentir-se para baixo, deprimido ou sem esperança',opts:P03},
+  {q:'3',label:'Dificuldade para dormir / dormir demais',opts:P03},
+  {q:'4',label:'Cansaço ou pouca energia',opts:P03},
+  {q:'5',label:'Falta de apetite ou comer demais',opts:P03},
+  {q:'6',label:'Sentir-se mal consigo / fracasso',opts:P03},
+  {q:'7',label:'Dificuldade de concentração',opts:P03},
+  {q:'8',label:'Lentidão ou agitação perceptível por outros',opts:P03},
+  {q:'9',label:'Pensamentos de que seria melhor morrer ou de se ferir',opts:P03,flag:true}
+ ],
+ bands:[[0,4,'Mínima','ok'],[5,9,'Leve','mild'],[10,14,'Moderada','mod'],[15,19,'Moderadamente grave','sev'],[20,27,'Grave','sev']],
+ foot:'Máx. 27. Item 9 positivo → avaliar risco de suicídio (C-SSRS).'},
+
+{id:'gad7',cat:'humor',catLabel:'Ansiedade',name:'GAD-7',desc:'Gravidade de sintomas ansiosos nas últimas 2 semanas.',type:'sum',
+ items:[
+  {q:'1',label:'Sentir-se nervoso, ansioso ou no limite',opts:P03},
+  {q:'2',label:'Não conseguir parar/controlar as preocupações',opts:P03},
+  {q:'3',label:'Preocupar-se demais com coisas diferentes',opts:P03},
+  {q:'4',label:'Dificuldade para relaxar',opts:P03},
+  {q:'5',label:'Inquietação, dificuldade de ficar parado',opts:P03},
+  {q:'6',label:'Ficar facilmente aborrecido/irritável',opts:P03},
+  {q:'7',label:'Medo como se algo terrível fosse acontecer',opts:P03}
+ ],
+ bands:[[0,4,'Mínima','ok'],[5,9,'Leve','mild'],[10,14,'Moderada','mod'],[15,21,'Grave','sev']],
+ foot:'Máx. 21.'},
+
+/* ====== SUBSTÂNCIAS ====== */
+{id:'audit',cat:'subst',catLabel:'Álcool',name:'AUDIT',desc:'Rastreio de uso de risco/nocivo e dependência de álcool (OMS).',type:'sum',
+ items:[
+  {q:'1',label:'Frequência de consumo',opts:[[0,'Nunca'],[1,'Mensal ou menos'],[2,'2–4x/mês'],[3,'2–3x/sem'],[4,'≥4x/sem']]},
+  {q:'2',label:'Doses num dia típico',opts:[[0,'1–2'],[1,'3–4'],[2,'5–6'],[3,'7–9'],[4,'≥10']]},
+  {q:'3',label:'Frequência de 6+ doses numa ocasião',opts:FREQ},
+  {q:'4',label:'Não conseguir parar após começar',opts:FREQ},
+  {q:'5',label:'Deixar de fazer o esperado por causa da bebida',opts:FREQ},
+  {q:'6',label:'Beber pela manhã para se recuperar',opts:FREQ},
+  {q:'7',label:'Culpa/remorso após beber',opts:FREQ},
+  {q:'8',label:'Não lembrar da noite anterior',opts:FREQ},
+  {q:'9',label:'Você/alguém se feriu por causa da bebida',opts:[[0,'Não'],[2,'Sim, não no último ano'],[4,'Sim, no último ano']]},
+  {q:'10',label:'Alguém sugeriu que diminuísse',opts:[[0,'Não'],[2,'Sim, não no último ano'],[4,'Sim, no último ano']]}
+ ],
+ bands:[[0,7,'Baixo risco','ok'],[8,15,'Uso de risco','mild'],[16,19,'Uso nocivo','mod'],[20,40,'Provável dependência','sev']],
+ foot:'Máx. 40. Corte ≥8 (≥7 em mulheres/idosos). ≥20 sugere dependência.'},
+
+{id:'cage',cat:'subst',catLabel:'Álcool (rápido)',name:'CAGE',desc:'Rastreio rápido de problemas com álcool (4 perguntas).',type:'sum',
+ items:[
+  {q:'C',label:'Já sentiu que deveria Cortar/diminuir a bebida?',opts:YN},
+  {q:'A',label:'As pessoas o Aborrecem ao criticar seu beber?',opts:YN},
+  {q:'G',label:'Já se sentiu culpado (Guilty) por beber?',opts:YN},
+  {q:'E',label:'Já bebeu pela manhã para se acalmar (Eye-opener)?',opts:YN}
+ ],
+ bands:[[0,1,'Triagem negativa','ok'],[2,4,'Triagem positiva — investigar','mod']],
+ foot:'≥2 respostas afirmativas = triagem positiva.'},
+
+{id:'ftnd',cat:'subst',catLabel:'Nicotina',name:'Fagerström (FTND)',desc:'Grau de dependência de nicotina.',type:'sum',
+ items:[
+  {q:'1',label:'Tempo até o 1º cigarro ao acordar',opts:[[3,'≤5 min'],[2,'6–30 min'],[1,'31–60 min'],[0,'>60 min']]},
+  {q:'2',label:'Difícil não fumar em locais proibidos?',opts:YN},
+  {q:'3',label:'Qual cigarro detestaria largar?',opts:[[1,'O primeiro da manhã'],[0,'Qualquer outro']]},
+  {q:'4',label:'Cigarros por dia',opts:[[0,'≤10'],[1,'11–20'],[2,'21–30'],[3,'≥31']]},
+  {q:'5',label:'Fuma mais nas primeiras horas após acordar?',opts:YN},
+  {q:'6',label:'Fuma mesmo doente/acamado?',opts:YN}
+ ],
+ bands:[[0,2,'Muito baixa','ok'],[3,4,'Baixa','mild'],[5,5,'Média','mod'],[6,7,'Alta','sev'],[8,10,'Muito alta','sev']],
+ foot:'Máx. 10.'},
+
+/* ====== CALCULADORAS ====== */
+{id:'qtc',cat:'calc',catLabel:'Cardiologia',name:'QTc',desc:'Correção do intervalo QT (Bazett e Fridericia). Crítico com antipsicóticos e metadona.',type:'calc-qtc',
+ foot:'Prolongado: >450 ms (♂) / >460 ms (♀) — AHA/ACCF/HRS 2009. Risco alto de torsades: >500 ms ou ΔQTc >60 ms. Preferir Fridericia fora de FC 60–100.'},
+
+{id:'cpz',cat:'calc',catLabel:'Equivalência',name:'Equivalente de clorpromazina',desc:'Converte a dose de um antipsicótico em mg-equivalentes de clorpromazina.',type:'calc-eq',
+ ref:{'Clorpromazina':100,'Haloperidol':2,'Risperidona':2,'Olanzapina':5,'Quetiapina':75,'Aripiprazol':7.5,'Ziprasidona':60,'Paliperidona':1.5,'Clozapina':50,'Flufenazina':2,'Sulpirida':200},
+ base:100,unit:'mg CPZ-eq',
+ foot:'Aproximações (base Woods 2003 para atípicos; consenso para os demais — variam por fonte). Úteis para troca/rodízio; não usar como conversão exata.'},
+
+{id:'diaz',cat:'calc',catLabel:'Equivalência',name:'Equivalente de diazepam',desc:'Converte a dose de um benzodiazepínico em mg-equivalentes de diazepam (desmame).',type:'calc-eq',
+ ref:{'Diazepam':10,'Clonazepam':0.5,'Lorazepam':1,'Alprazolam':0.5,'Clordiazepóxido':25,'Oxazepam':20,'Temazepam':20,'Midazolam':7.5,'Bromazepam':6,'Flurazepam':15},
+ base:10,unit:'mg diazepam-eq',
+ foot:'Aproximações (base Ashton; midazolam vem de tabelas clínicas — não consta no Manual de Ashton). Para desmame: converter para diazepam-equivalente e reduzir gradualmente.'}
+];
+
+/* ---------- referências oficiais + explicação/conduta ---------- */
+var META={
+ cssrs:{ref:'https://cssrs.columbia.edu/',mede:'gravidade da ideação suicida e presença/recência de comportamento suicida.',quando:'toda admissão; item 9 do PHQ-9 positivo; mudança clínica; antes de progredir o regime ou dar alta.',conduta:'define o nível de vigilância (1:1, observação), a restrição de meios, internação vs. ambulatório e o plano de segurança.'},
+ bvc:{ref:'https://pubmed.ncbi.nlm.nih.gov/?term=Br%C3%B8set+Violence+Checklist',mede:'probabilidade de agressão nas próximas 24h (6 sinais observáveis).',quando:'pacientes agitados, psicóticos ou intoxicados; reavaliar a cada plantão.',conduta:'0 = rotina; 1–2 = medidas preventivas (desescalada, ambiente); ≥3 = medidas imediatas (mobilizar equipe, contenção conforme protocolo).'},
+ ciwa:{ref:'https://www.mdcalc.com/ciwa-ar-alcohol-withdrawal',mede:'gravidade da síndrome de abstinência alcoólica.',quando:'risco de abstinência (uso pesado, último uso recente); aplicar seriado a cada 1–4h.',conduta:'guia o benzodiazepínico sintomático (tratar ≥8–10) e a frequência; a tendência define o desmame; >20 sinaliza risco de convulsão/delirium tremens.'},
+ cows:{ref:'https://www.mdcalc.com/calc/1985/cows-score-opiate-withdrawal',mede:'gravidade da abstinência de opioides por sinais objetivos.',quando:'suspeita de abstinência; essencial antes de iniciar buprenorfina.',conduta:'define o momento seguro de iniciar buprenorfina (≥8–12, evita abstinência precipitada) e o uso de sintomáticos.'},
+ cam:{ref:'https://www.va.gov/covidtraining/docs/The_Confusion_Assessment_Method.pdf',mede:'presença de delirium por um algoritmo de 4 características.',quando:'qualquer alteração aguda de comportamento/cognição; idoso, pós-operatório, intoxicação/abstinência.',conduta:'positivo → buscar e tratar a causa orgânica e revisar fármacos deliriogênicos; não tratar como psicose primária.'},
+ aims:{ref:'https://www.mdcalc.com/calc/10435/abnormal-involuntary-movement-scale-aims',mede:'movimentos involuntários sugestivos de discinesia tardia.',quando:'basal e periódico (a cada 3–6 meses) em quem usa antipsicótico.',conduta:'detecção precoce → reduzir/trocar o antipsicótico e considerar inibidor de VMAT2.'},
+ barnes:{ref:'https://pubmed.ncbi.nlm.nih.gov/?term=Barnes+Akathisia+Rating+Scale',mede:'acatisia (componente objetivo, subjetivo e avaliação global).',quando:'após início/aumento de antipsicótico; queixa de inquietação interna.',conduta:'presente → reduzir/trocar, propranolol; não confundir com agitação psicótica (aumentar o antipsicótico piora).'},
+ sas:{ref:'https://pubmed.ncbi.nlm.nih.gov/?term=Simpson+Angus+rating+scale+extrapyramidal',mede:'parkinsonismo induzido por antipsicótico (rigidez, tremor, marcha, salivação).',quando:'após antipsicótico, sobretudo típicos e risperidona.',conduta:'parkinsonismo presente (média > 0,3) → anticolinérgico (biperideno), reduzir/trocar o antipsicótico.'},
+ phq9:{ref:'https://www.phqscreeners.com/',mede:'gravidade dos sintomas depressivos nas últimas 2 semanas.',quando:'rastreio, avaliação basal e acompanhamento seriado da resposta.',conduta:'a gravidade orienta a intensidade do tratamento; a variação seriada indica resposta/ajuste; o item 9 dispara avaliação de risco.'},
+ gad7:{ref:'https://www.phqscreeners.com/',mede:'gravidade dos sintomas ansiosos (TAG) nas últimas 2 semanas.',quando:'rastreio e acompanhamento.',conduta:'a gravidade orienta a abordagem e mede a resposta ao longo do tempo.'},
+ audit:{ref:'https://www.who.int/publications/i/item/WHO-MSD-MSB-01.6a',mede:'padrão de consumo de álcool (risco, nocivo, dependência).',quando:'triagem na admissão e em ambulatório.',conduta:'8–15 → intervenção breve; 16–19 → intervenção mais intensa; ≥20 → tratamento de dependência.'},
+ cage:{ref:'https://www.mdcalc.com/cage-questions-alcohol-use',mede:'triagem rápida de problema com álcool (4 perguntas).',quando:'quando não há tempo para o AUDIT.',conduta:'≥2 afirmativas → aprofundar com AUDIT e avaliação completa.'},
+ ftnd:{ref:'https://pubmed.ncbi.nlm.nih.gov/1932883/',mede:'grau de dependência de nicotina.',quando:'tabagistas, ao planejar a cessação.',conduta:'o grau orienta a intensidade da farmacoterapia (reposição de nicotina, vareniclina/bupropiona).'},
+ qtc:{ref:'https://www.mdcalc.com/corrected-qt-interval-qtc',mede:'o intervalo QT corrigido pela frequência cardíaca.',quando:'antes e durante antipsicóticos, metadona; distúrbios eletrolíticos, polifarmácia.',conduta:'prolongado → corrigir K⁺/Mg²⁺, revisar fármacos; >500 ms ou ΔQTc >60 ms → suspender (risco de torsades).'},
+ cpz:{ref:'https://pubmed.ncbi.nlm.nih.gov/?term=antipsychotic+dose+equivalents+chlorpromazine',mede:'a dose de um antipsicótico em mg-equivalentes de clorpromazina.',quando:'troca/rodízio de antipsicótico; avaliar a carga total em polifarmácia.',conduta:'orienta a dose inicial do novo fármaco; aproximação, varia por fonte.'},
+ diaz:{ref:'https://www.benzo.org.uk/manual/',mede:'a dose de um benzodiazepínico em mg-equivalentes de diazepam.',quando:'desmame; conversão para um agente de meia-vida longa.',conduta:'converter a dose total em diazepam-equivalente e reduzir gradualmente.'}
+};
+
+/* ---------- render ---------- */
+var grid=document.getElementById('grid'), noresults=document.getElementById('noresults');
+function el(t,c,h){var e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;}
+function optsHTML(opts){return '<div class="opts">'+opts.map(function(o){return '<button type="button" class="opt" data-val="'+o[0]+'">'+o[1]+'</button>';}).join('')+'</div>';}
+function plain(x){return String(x).replace(/<[^>]*>/g,'').replace(/\s+/g,' ').trim();}
+
+SCALES.forEach(function(s){
+  var card=el('div','card');card.dataset.cat=s.cat;card.dataset.id=s.id;
+  card.dataset.search=(s.name+' '+s.catLabel+' '+s.desc).toLowerCase();
+  var m=META[s.id]||{};
+  var link=m.ref?' <a class="reflink" href="'+m.ref+'" target="_blank" rel="noopener" title="Referência oficial / verificar pontuação">↗ ref</a>':'';
+  card.appendChild(el('div','head','<div class="cat">'+s.catLabel+'</div><h2>'+s.name+link+'</h2><p>'+s.desc+'</p>'));
+  if(m.mede)card.appendChild(el('details','info','<summary>ⓘ Para que serve · quando usar · conduta</summary><div class="infobody"><p><b>Mede:</b> '+m.mede+'</p><p><b>Quando usar:</b> '+m.quando+'</p><p><b>Conduta:</b> '+m.conduta+'</p></div>'));
+
+  if(s.type==='calc-qtc'){
+    card.appendChild(el('div','body','<div class="calcrow">'+
+      '<label class="fld"><span>QT (ms)</span><input class="num qt" type="number" min="200" max="700" placeholder="ms"></label>'+
+      '<label class="fld"><span>FC (bpm)</span><input class="num hr" type="number" min="20" max="250" placeholder="bpm"></label>'+
+      '<label class="fld"><span>Sexo</span><select class="sex"><option value="m">Masculino</option><option value="f">Feminino</option></select></label></div>'+
+      '<div class="calcout out">Informe QT e FC.</div>'));
+  } else if(s.type==='calc-eq'){
+    var opts=Object.keys(s.ref).map(function(k){return '<option value="'+s.ref[k]+'">'+k+'</option>';}).join('');
+    var b2=el('div','body','<div class="calcrow">'+
+      '<label class="fld"><span>Fármaco</span><select class="drug">'+opts+'</select></label>'+
+      '<label class="fld"><span>Dose (mg/dia)</span><input class="num dose" type="number" min="0" step="0.5" placeholder="mg"></label></div>'+
+      '<div class="calcout out">Informe a dose.</div>');
+    b2.dataset.base=s.base;b2.dataset.unit=s.unit;card.appendChild(b2);
+  } else {
+    var body=el('div','body');
+    s.items.forEach(function(it){
+      var row=el('div','item','<span class="lab"><span class="qn">'+it.q+'.</span>'+it.label+(it.flag?'<span class="flag">alerta</span>':'')+'</span>'+optsHTML(it.opts));
+      body.appendChild(row);
+    });
+    card.appendChild(body);
+    card.appendChild(el('div','result lv-info','<div class="score">—</div><div class="interp"><span class="badge">Preencha os itens</span><div class="txt"></div></div>'));
+  }
+
+  var foot=el('div','foot','<b>Nota.</b> '+s.foot);
+  var btns=el('div','btns');
+  var cp=el('button','minib copybtn','⧉ Copiar');cp.onclick=function(){copyCard(card,s,cp);};
+  var rst=el('button','minib','↺ Limpar');rst.onclick=function(){resetCard(card,s);};
+  btns.appendChild(cp);btns.appendChild(rst);foot.appendChild(btns);
+  card.appendChild(foot);
+  grid.appendChild(card);
+
+  if(s.type==='calc-qtc'){card.querySelectorAll('input,select').forEach(function(x){x.addEventListener('input',function(){calcQTc(card,s);});});}
+  else if(s.type==='calc-eq'){card.querySelectorAll('input,select').forEach(function(x){x.addEventListener('input',function(){calcEq(card,s);});});}
+  else{
+    card.querySelectorAll('.item').forEach(function(it){
+      it.addEventListener('click',function(e){
+        var b=e.target.closest('.opt');if(!b)return;
+        it.querySelectorAll('.opt').forEach(function(x){x.classList.remove('sel');});
+        b.classList.add('sel');score(card,s);
+      });
+    });
+  }
+});
+
+/* ---------- scoring ---------- */
+function band(bands,v){for(var i=0;i<bands.length;i++){if(v>=bands[i][0]&&v<=bands[i][1])return bands[i];}return bands[bands.length-1];}
+function vals(card){return [].slice.call(card.querySelectorAll('.item')).map(function(it){var b=it.querySelector('.opt.sel');return b?+b.dataset.val:null;});}
+
+function setRes(card,level,scoreTxt,badge,txt){
+  var r=card.querySelector('.result');r.className='result lv-'+level;
+  r.querySelector('.score').innerHTML=scoreTxt;
+  r.querySelector('.badge').textContent=badge;
+  r.querySelector('.txt').textContent=txt||'';
+}
+function setSummary(card,s,level,line){card._sumLevel=level;card._sumLine=line||null;refreshSummary();}
+
+function score(card,s){
+  var v=vals(card),filled=v.filter(function(x){return x!==null;}).length,total=v.length;
+  if(s.type==='cssrs')return scoreCSSRS(card,s,v);
+  if(s.type==='cam')return scoreCAM(card,s,v);
+  if(s.type==='aims')return scoreAIMS(card,s,v);
+  var sum=v.reduce(function(a,b){return a+(b||0);},0);
+
+  if(s.type==='last'){
+    var last=v[v.length-1];
+    if(last===null){setRes(card,'info','—','Preencha a avaliação global','');return setSummary(card,s,'info',null);}
+    var bl=band(s.bands,last);setRes(card,bl[3],last+'<small> /5</small>',bl[2],'');
+    return setSummary(card,s,bl[3],s.name+': '+last+'/5 — '+bl[2]);
+  }
+  if(s.type==='sas'){
+    if(filled<total){setRes(card,'info',sum+'<small> /40</small>','Preenchendo… ('+filled+'/'+total+')','');return setSummary(card,s,'info',null);}
+    var mean=(sum/10).toFixed(2),bs=band(s.bands,sum);
+    setRes(card,bs[3],sum+'<small> /40</small>',bs[2],'Média '+mean+(sum>3?' — > 0,3':''));
+    return setSummary(card,s,bs[3],s.name+': '+sum+'/40 (média '+mean+') — '+bs[2]);
+  }
+  // sum
+  var max=s.items.reduce(function(a,it){return a+Math.max.apply(null,it.opts.map(function(o){return o[0];}));},0);
+  var b=band(s.bands,sum),extra='',alert='';
+  if(s.id==='phq9'&&v[8]>0)alert=' [⚠ item 9 positivo]';
+  if(filled<total)extra='Preenchendo… ('+filled+'/'+total+')';
+  if(s.id==='phq9'&&v[8]>0)extra=(extra?extra+' · ':'')+'⚠ item 9 positivo';
+  setRes(card,b[3],sum+'<small> /'+max+'</small>',b[2],extra);
+  setSummary(card,s,b[3], filled<total?null : s.name+': '+sum+'/'+max+' — '+b[2]+alert);
+}
+function scoreCSSRS(card,s,v){
+  var recent=v[6]===1,lifetime=(v[5]===1||recent),planIntent=(v[3]===1||v[4]===1),method=v[2]===1,low=(v[0]===1||v[1]===1);
+  var lvl,badge,txt,ind,report=true;
+  if(v.every(function(x){return x===0;})){lvl='ok';badge='Sem ideação atual';txt='Reavaliar conforme contexto clínico.';ind='–';}
+  else if(recent){lvl='sev';badge='Risco alto';txt='Comportamento suicida recente (≤3 meses) → vigilância e medidas de segurança imediatas.';ind='⚠';}
+  else if(planIntent){lvl='sev';badge='Risco alto';txt='Ideação com plano e/ou intenção → vigilância e plano de segurança imediatos.';ind='5';}
+  else if(method){lvl='mod';badge='Risco moderado';txt='Ideação ativa com método, sem intenção → avaliação e plano de segurança.';ind='3';}
+  else if(lifetime){lvl='mod';badge='Risco moderado';txt='Comportamento suicida prévio (>3 meses), sem ideação atual de risco → monitorar.';ind='C';}
+  else if(low){lvl='mild';badge='Risco baixo';txt='Desejo de morte / pensamento passivo, sem método nem intenção → monitorar.';ind='1';}
+  else{lvl='info';badge='Preencha os itens';txt='';ind='—';report=false;}
+  setRes(card,lvl,ind,badge,txt);
+  setSummary(card,s,lvl,report?s.name+': '+badge:null);
+}
+function scoreAIMS(card,s,v){
+  if(v.some(function(x){return x===null;})){setRes(card,'info','—','Preencha os 7 itens','');return setSummary(card,s,'info',null);}
+  var total=v.reduce(function(a,b){return a+b;},0);
+  var n2=v.filter(function(x){return x>=2;}).length,hi=v.some(function(x){return x>=3;}),sev=v.some(function(x){return x===4;});
+  var positive=hi||n2>=2;
+  if(positive){
+    var crit=hi?'≥3 em uma área':'≥2 em duas ou mais áreas';
+    setRes(card,sev?'sev':'mod',total+'<small> /28</small>','Sugestivo de discinesia tardia','Critério de Schooler-Kane: '+crit+' · gravidade '+total+'/28.');
+    setSummary(card,s,sev?'sev':'mod',s.name+': '+total+'/28 — sugestivo de discinesia tardia ('+crit+')');
+  } else {
+    setRes(card,'ok',total+'<small> /28</small>','Critério não preenchido','Abaixo do limiar de DT (soma 1–7 = gravidade).');
+    setSummary(card,s,'ok',s.name+': '+total+'/28 — critério de DT não preenchido');
+  }
+}
+function scoreCAM(card,s,v){
+  if(v.some(function(x){return x===null;})){setRes(card,'info','—','Preencha as 4 características','');return setSummary(card,s,'info',null);}
+  var delirium=(v[0]===1&&v[1]===1)&&(v[2]===1||v[3]===1);
+  if(delirium){setRes(card,'sev','+','Delirium provável','Característica 1 E 2 E (3 OU 4). Investigar causa orgânica.');setSummary(card,s,'sev',s.name+': Delirium provável (positivo)');}
+  else{setRes(card,'ok','–','Critérios não preenchidos','Não exclui delirium se quadro mudar — reavaliar.');setSummary(card,s,'ok',s.name+': critérios não preenchidos (negativo)');}
+}
+function calcQTc(card,s){
+  var qt=+card.querySelector('.qt').value,hr=+card.querySelector('.hr').value,sex=card.querySelector('.sex').value;
+  var out=card.querySelector('.out');
+  if(!qt||!hr){out.innerHTML='Informe QT e FC.';return setSummary(card,s,'info',null);}
+  var rr=60/hr,b=Math.round(qt/Math.sqrt(rr)),f=Math.round(qt/Math.cbrt(rr));
+  var lim=sex==='m'?450:460,color=b>500?'sev':(b>lim?'mod':'ok');
+  var flag=b>500?'⚠ Risco alto de torsades':(b>lim?'Prolongado':'Normal');
+  out.innerHTML='QTc Bazett <b style="color:var(--'+color+')">'+b+' ms</b> · Fridericia '+f+' ms<br><span style="font-weight:600;color:var(--'+color+')">'+flag+'</span> (limite ♂450/♀460, alto >500)';
+  setSummary(card,s,color,s.name+': Bazett '+b+' ms · Fridericia '+f+' ms — '+flag);
+}
+function calcEq(card,s){
+  var sel=card.querySelector('.drug'),per=+sel.value,drug=sel.options[sel.selectedIndex].textContent,dose=+card.querySelector('.dose').value;
+  var bb=+card.querySelector('.body').dataset.base||s.base,unit=card.querySelector('.body').dataset.unit||s.unit;
+  var out=card.querySelector('.out');
+  if(!dose){out.innerHTML='Informe a dose.';return setSummary(card,s,'info',null);}
+  var eq=(dose*bb/per);eq=eq>=10?Math.round(eq):Math.round(eq*10)/10;
+  out.innerHTML='≈ <b style="color:var(--green)">'+eq+' '+unit+'</b>';
+  setSummary(card,s,'info',s.name+': '+drug+' '+dose+' mg/dia ≈ '+eq+' '+unit);
+}
+
+/* ---------- cópia ---------- */
+function copyCard(card,s,btn){
+  var txt;
+  if(card._sumLine)txt=card._sumLine;
+  else{
+    var res=card.querySelector('.result'),out=card.querySelector('.out');
+    if(res){var sc=plain(res.querySelector('.score').textContent),bd=res.querySelector('.badge').textContent.trim(),t=res.querySelector('.txt').textContent.trim();
+      txt=s.name+': '+sc+' — '+bd+(t?' ('+t+')':'');}
+    else txt=s.name+': '+(out?plain(out.textContent):'');
+  }
+  doCopy(txt,btn,'⧉ Copiar');
+}
+function doCopy(txt,btn,orig){
+  var done=function(){if(!btn)return;btn.textContent='✓ Copiado';btn.classList.add('done');setTimeout(function(){btn.textContent=orig;btn.classList.remove('done');},1500);};
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(txt).then(done,function(){fallbackCopy(txt);done();});
+  else{fallbackCopy(txt);done();}
+}
+function fallbackCopy(txt){var ta=document.createElement('textarea');ta.value=txt;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.focus();ta.select();try{document.execCommand('copy');}catch(e){}document.body.removeChild(ta);}
+
+function resetCard(card,s){
+  card.querySelectorAll('.opt.sel').forEach(function(x){x.classList.remove('sel');});
+  card.querySelectorAll('input.num').forEach(function(x){x.value='';});
+  card.querySelectorAll('select.drug,select.sex').forEach(function(x){x.selectedIndex=0;});
+  if(card.querySelector('.result'))setRes(card,'info','—','Preencha os itens','');
+  if(card.querySelector('.out'))card.querySelector('.out').innerHTML=card.querySelector('.qt')?'Informe QT e FC.':'Informe a dose.';
+  setSummary(card,s,'info',null);
+}
+
+/* ---------- resumo geral ---------- */
+var sumbar=document.getElementById('sumbar'),sumpanel=document.getElementById('sumpanel');
+function todayStr(){var d=new Date();return d.toLocaleDateString('pt-BR')+' '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});}
+function collected(){
+  var out=[];
+  document.querySelectorAll('.card').forEach(function(c){if(c._sumLine)out.push({line:c._sumLine,level:c._sumLevel||'info'});});
+  return out;
+}
+function summaryText(){
+  var c=collected();if(!c.length)return '';
+  return 'Escores em Psiquiatria — '+todayStr()+'\n'+c.map(function(x){return '• '+x.line;}).join('\n');
+}
+function refreshSummary(){
+  var c=collected();
+  document.getElementById('sumcount').textContent=c.length;
+  sumbar.classList.toggle('show',c.length>0);
+  if(c.length===0){sumpanel.classList.remove('show');document.getElementById('sumToggle').textContent='Ver resumo';}
+  if(sumpanel.classList.contains('show'))renderPanel();
+}
+function renderPanel(){
+  document.getElementById('sumdate').textContent='Gerado em '+todayStr();
+  var list=document.getElementById('sumlist'),c=collected();
+  if(!c.length){list.innerHTML='<div class="sumempty">Nenhum escore preenchido ainda.</div>';document.getElementById('sumpreview').textContent='';return;}
+  list.innerHTML=c.map(function(x){return '<div class="sumitem"><span class="dot '+x.level+'"></span><span class="txt2">'+x.line.replace(/^([^:]+):/,'<b>$1:</b>')+'</span></div>';}).join('');
+  document.getElementById('sumpreview').textContent=summaryText();
+}
+document.getElementById('sumToggle').addEventListener('click',function(){
+  var open=sumpanel.classList.toggle('show');this.textContent=open?'Ocultar':'Ver resumo';if(open)renderPanel();
+});
+document.getElementById('sumCopy').addEventListener('click',function(){var t=summaryText();if(t)doCopy(t,this,'⧉ Copiar resumo');});
+
+/* ---------- troca de modo (Escores / Guia) ---------- */
+function setMode(mode){
+  document.querySelectorAll('.mtab').forEach(function(b){b.classList.toggle('active',b.dataset.mode===mode);});
+  document.getElementById('subEscores').hidden=mode!=='escores';
+  document.getElementById('subGuia').hidden=mode!=='guia';
+  document.getElementById('grid').hidden=mode!=='escores';
+  document.getElementById('guide').hidden=mode!=='guia';
+  document.getElementById('sumbar').style.display=(mode==='escores')?'':'none';
+  if(mode!=='escores')document.getElementById('sumpanel').classList.remove('show');
+  else refreshSummary();
+  window.scrollTo({top:0});
+}
+document.getElementById('tabs').addEventListener('click',function(e){
+  var m=e.target.closest('.mtab');if(m)setMode(m.dataset.mode);
+});
+
+/* ---------- filtro + busca (escores) ---------- */
+var activeCat='all',query='';
+function applyFilter(){
+  var shown=0;
+  document.querySelectorAll('.card').forEach(function(card){
+    var okCat=(activeCat==='all'||card.dataset.cat===activeCat);
+    var okQ=(!query||card.dataset.search.indexOf(query)>-1);
+    var vis=okCat&&okQ;card.style.display=vis?'':'none';if(vis)shown++;
+  });
+  noresults.style.display=shown?'none':'block';
+}
+document.getElementById('subEscores').addEventListener('click',function(e){
+  var t=e.target.closest('.tab');if(!t||!t.dataset.cat)return;
+  document.querySelectorAll('#subEscores .tab').forEach(function(x){x.classList.remove('active');});t.classList.add('active');
+  activeCat=t.dataset.cat;applyFilter();window.scrollTo({top:0,behavior:'smooth'});
+});
+document.getElementById('search').addEventListener('input',function(){query=this.value.trim().toLowerCase();applyFilter();});
+document.getElementById('clearall').addEventListener('click',function(){SCALES.forEach(function(s){resetCard(document.querySelector('.card[data-id="'+s.id+'"]'),s);});});
+
+/* ---------- busca no guia (linhas de fármaco) ---------- */
+var gsearch=document.getElementById('guidesearch'),gcount=document.getElementById('guidecount'),gnote=document.getElementById('guidenote');
+gsearch.addEventListener('input',function(){
+  var q=this.value.trim().toLowerCase(),total=0;
+  document.querySelectorAll('#guide section').forEach(function(sec){
+    var rows=[].slice.call(sec.querySelectorAll('tbody tr')),shown=0;
+    rows.forEach(function(r){
+      var hit=!q||r.textContent.toLowerCase().indexOf(q)>-1;
+      r.style.display=hit?'':'none';if(hit&&q)shown++;if(hit)total++;
+    });
+    if(q){var hasRows=sec.querySelector('tbody tr');sec.style.display=(hasRows&&shown===0)?'none':'';}
+    else sec.style.display='';
+  });
+  gcount.textContent=q?(total+' resultado'+(total===1?'':'s')):'';
+  gnote.style.display=(q&&total===0)?'block':'none';
+});
+</script>
+</body>
+</html>
