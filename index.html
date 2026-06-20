@@ -147,6 +147,8 @@
   .rxf input{font-family:var(--sans);font-size:.82rem;padding:6px 8px;border:1px solid var(--line);border-radius:7px;background:var(--surface);color:var(--ink)}
   .rxf input:focus{border-color:var(--green-2);box-shadow:0 0 0 3px var(--green-tint);outline:none}
   .rxitem .rxt{font-size:.8rem;margin:2px 0}.rxitem .rxt b{color:var(--ink)}
+  .rxobs{font-size:.78rem;margin:2px 0 6px;color:var(--ink-soft)}.rxobs>b{color:var(--ink)}
+  .rxobs ul{margin:3px 0 0;padding-left:18px}.rxobs li{margin:2px 0}
   .rxmon{font-size:.8rem;margin-top:6px}.rxmon>b{color:var(--ink)}
   .rxmon ul{margin:4px 0 0;padding-left:18px}.rxmon li{margin:2px 0}
   .rxexames{margin-top:6px;padding:11px 14px;border:1px solid #bcd3bf;background:var(--green-tint);border-radius:10px;font-size:.82rem}
@@ -1057,9 +1059,37 @@ function injectRxButtons(){
     }
   });
 }
+/* separa a via de administração (VO/IM/IV...) da posologia */
+function splitVia(p){
+  p=String(p||'');
+  var m=p.match(/^(VO|SL|SC|IM|IV)(\s*\/\s*(VO|SL|SC|IM|IV))*/);
+  if(m)return {via:m[0].replace(/\s+/g,' ').trim(),posol:p.slice(m[0].length).trim()};
+  return {via:'VO',posol:p};
+}
+/* reduz a dose a um único valor; manda as variações para obs (sem mexer em esquemas complexos) */
+function splitDose(label,val){
+  val=String(val==null?'':val);
+  if(!val)return {val:'',obs:[]};
+  var s=val.replace(/^(VO|SL|SC|IM|IV)\b\s*/,'').replace(/\s+(VO|SL|SC|IM|IV)\b(\s*(\(|$))/,'$2').replace(/\s+/g,' ').trim();
+  var simple=s.match(/^([\d][\d.,]*)\s*[–-]\s*([\d][\d.,]*)\s+([^()·]+?)(?:\s*\(([^)]*)\))?$/);
+  if(simple){
+    var single=(simple[1]+' '+simple[3]).replace(/\s+/g,' ').trim();
+    var obs=[label+' — faixa '+(simple[1]+'–'+simple[2]+' '+simple[3]).replace(/\s+/g,' ').trim()];
+    if(simple[4])obs.push(label+' — '+simple[4].trim());
+    return {val:single,obs:obs};
+  }
+  var pq=s.match(/^([^()]+?)\s*\(([^)]*)\)\s*$/);
+  if(pq&&!/[–·]/.test(pq[1]))return {val:pq[1].trim(),obs:[label+' — '+pq[2].trim()]};
+  return {val:s,obs:[]};
+}
+function buildRx(d){
+  var st=splitDose('Iniciar',d.s),me=splitDose('Dose-meta',d.m),mx=splitDose('Máx',d.x),v=splitVia(d.p);
+  return {cls:d.cls||'',start:st.val,meta:me.val,max:mx.val,via:v.via,posol:v.posol,
+    obs:st.obs.concat(me.obs).concat(mx.obs),titr:d.t,mon:d.mon||[]};
+}
 function toggleRx(name,btn){
   if(rx[name]){delete rx[name];}
-  else{var d=PRESC[name];rx[name]={cls:d.cls||'',start:d.s,meta:d.m,max:d.x,posol:d.p,titr:d.t,mon:d.mon||[]};}
+  else{rx[name]=buildRx(PRESC[name]);}
   syncRxBtn(name);refreshRx();
 }
 function syncRxBtn(name){
@@ -1072,21 +1102,24 @@ function rxText(){
   var keys=Object.keys(rx);if(!keys.length)return '';
   var L=['PRESCRIÇÃO PROPOSTA — '+todayStr()];
   keys.forEach(function(n){var d=rx[n];
-    L.push('• '+n+(d.cls?' ('+d.cls+')':'')+' — iniciar '+d.start+'; meta '+d.meta+(d.max?'; máx '+d.max:'')+'; '+d.posol);
+    var vp=((d.via||'')+(d.posol?' '+d.posol:'')).trim();
+    L.push('• '+n+(d.cls?' ('+d.cls+')':'')+' — iniciar '+d.start+'; meta '+d.meta+(d.max?'; máx '+d.max:'')+(vp?'; '+vp:''));
+    if(d.obs&&d.obs.length)d.obs.forEach(function(o){L.push('   Obs: '+o);});
     if(d.titr)L.push('   Titulação: '+d.titr);
   });
   var ex=rxAllExams();
   if(ex.length){L.push('');L.push('EXAMES / MONITORIZAÇÃO:');ex.forEach(function(m){L.push('- '+m);});}
   return L.join('\n');
 }
-function fld(n,f,label,val){return '<label>'+label+'<input data-drug="'+n.replace(/"/g,'&quot;')+'" data-f="'+f+'" value="'+String(val).replace(/"/g,'&quot;')+'"></label>';}
+function fld(n,f,label,val,cls){return '<label'+(cls?' class="'+cls+'"':'')+'>'+label+'<input data-drug="'+n.replace(/"/g,'&quot;')+'" data-f="'+f+'" value="'+String(val).replace(/"/g,'&quot;')+'"></label>';}
 function renderRx(){
   document.getElementById('rxdate').textContent='Gerado em '+todayStr();
   var keys=Object.keys(rx),list=document.getElementById('rxlist');
   if(!keys.length){list.innerHTML='<div class="sumempty">Nenhuma medicação selecionada. No <b>Guia rápido</b>, toque em <b>+ Rx</b> ao lado de um fármaco.</div>';document.getElementById('rxexames').innerHTML='';document.getElementById('rxpreview').textContent='';return;}
   list.innerHTML=keys.map(function(n){var d=rx[n];
     return '<div class="rxitem"><div class="rxh"><b>'+n+'</b>'+(d.cls?'<span class="rxcls">'+d.cls+'</span>':'')+'<button class="rxrm" data-drug="'+n.replace(/"/g,'&quot;')+'">remover</button></div>'+
-      '<div class="rxf">'+fld(n,'start','Iniciar',d.start)+fld(n,'meta','Dose-meta',d.meta)+fld(n,'max','Máx',d.max)+fld(n,'posol','Posologia',d.posol)+'</div>'+
+      '<div class="rxf">'+fld(n,'start','Iniciar',d.start)+fld(n,'meta','Dose-meta',d.meta)+fld(n,'max','Máx',d.max)+fld(n,'via','Via',d.via,'via')+fld(n,'posol','Posologia',d.posol)+'</div>'+
+      (d.obs&&d.obs.length?'<div class="rxobs"><b>Obs:</b><ul>'+d.obs.map(function(o){return '<li>'+o+'</li>';}).join('')+'</ul></div>':'')+
       '<div class="rxt"><b>Titulação:</b> '+d.titr+'</div>'+
       (d.mon&&d.mon.length?'<div class="rxmon"><b>Monitorar:</b><ul>'+d.mon.map(function(m){return '<li>'+m+'</li>';}).join('')+'</ul></div>':'')+
       '</div>';
