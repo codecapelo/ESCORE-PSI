@@ -58,10 +58,10 @@
   .item .lab{display:block;font-size:.84rem;margin-bottom:6px}
   .item .qn{font-family:var(--mono);font-size:.7rem;color:var(--green-2);margin-right:3px}
   .opts{display:flex;flex-wrap:wrap;gap:6px}
-  .opt{font-family:var(--sans);font-size:.77rem;padding:6px 10px;border:1px solid var(--line);border-radius:8px;background:var(--paper);
-    color:var(--ink-soft);cursor:pointer;transition:.12s;text-align:left;line-height:1.3}
-  .opt:hover{border-color:var(--green-2);color:var(--ink)}
-  .opt.sel{background:var(--green);border-color:var(--green);color:#f4f1e8;font-weight:600}
+  .opt{font-family:var(--sans);font-size:.77rem;padding:6px 10px;border:1px solid var(--cb,var(--line));border-radius:8px;background:var(--ct,var(--paper));
+    color:var(--ctx,var(--ink-soft));cursor:pointer;transition:.12s;text-align:left;line-height:1.3}
+  .opt:hover{border-color:var(--c,var(--green-2));filter:brightness(.97)}
+  .opt.sel{background:var(--c,var(--green));border-color:var(--c,var(--green));color:#fff;font-weight:600}
   .flag{font-family:var(--mono);font-size:.6rem;background:var(--sev-bg);color:var(--sev);padding:2px 6px;border-radius:5px;margin-left:6px}
 
   select.drug,select.sex,input.num{font-family:var(--sans);font-size:.82rem;padding:7px 8px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);outline:none;transition:.15s}
@@ -131,6 +131,28 @@
   .sumitem .txt2{flex:1}.sumitem .txt2 b{color:var(--ink)}
   .sumempty{color:var(--ink-soft);font-style:italic;font-size:.85rem}
   .sumpreview{margin-top:12px;font-family:var(--mono);font-size:.74rem;white-space:pre-wrap;background:var(--paper-2);border:1px solid var(--line);border-radius:9px;padding:11px 13px;color:var(--ink-soft);max-height:160px;overflow:auto}
+
+  /* botão + Rx nas tabelas do guia + painel de prescrição */
+  .rxadd{font-family:var(--mono);font-size:.58rem;font-weight:700;margin-left:8px;border:1px solid var(--green-2);color:var(--green);background:var(--surface);border-radius:6px;padding:2px 6px;cursor:pointer;vertical-align:middle;white-space:nowrap}
+  .rxadd:hover{background:var(--green-tint)}
+  .rxadd.on{background:var(--green);color:#fff;border-color:var(--green)}
+  .rxitem{border:1px solid var(--line);border-radius:10px;padding:11px 13px;margin-bottom:10px;background:var(--paper-2)}
+  .rxitem .rxh{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+  .rxitem .rxh b{font-family:var(--serif);font-size:1.02rem}
+  .rxcls{font-family:var(--mono);font-size:.58rem;text-transform:uppercase;letter-spacing:.1em;color:var(--green-2);background:var(--green-tint);padding:2px 7px;border-radius:5px}
+  .rxrm{margin-left:auto;border:1px solid var(--line);background:none;border-radius:6px;cursor:pointer;color:var(--sev);font-size:.68rem;font-family:var(--mono);padding:3px 8px}
+  .rxrm:hover{border-color:#d9a99c}
+  .rxf{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;margin-bottom:8px}
+  .rxf label{display:flex;flex-direction:column;gap:3px;font-family:var(--mono);font-size:.6rem;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.06em}
+  .rxf input{font-family:var(--sans);font-size:.82rem;padding:6px 8px;border:1px solid var(--line);border-radius:7px;background:var(--surface);color:var(--ink)}
+  .rxf input:focus{border-color:var(--green-2);box-shadow:0 0 0 3px var(--green-tint);outline:none}
+  .rxitem .rxt{font-size:.8rem;margin:2px 0}.rxitem .rxt b{color:var(--ink)}
+  .rxmon{font-size:.8rem;margin-top:6px}.rxmon>b{color:var(--ink)}
+  .rxmon ul{margin:4px 0 0;padding-left:18px}.rxmon li{margin:2px 0}
+  .rxexames{margin-top:6px;padding:11px 14px;border:1px solid #bcd3bf;background:var(--green-tint);border-radius:10px;font-size:.82rem}
+  .rxexames:empty{display:none}
+  .rxexames h4{margin:0 0 5px;font-size:.84rem;color:var(--green);font-family:var(--serif)}
+  .rxexames ul{margin:0;padding-left:18px}.rxexames li{margin:2px 0}
 
   footer{max-width:1180px;margin:0 auto;padding:0 28px 40px;font-size:.78rem;color:var(--ink-soft)}
   .noresults{display:none;grid-column:1/-1;padding:40px;text-align:center;color:var(--ink-soft);font-style:italic}
@@ -463,6 +485,21 @@
   </div>
 </div>
 
+<div class="sumpanel rxpanel" id="rxpanel"><div class="pw">
+  <h3>Prescrição proposta</h3>
+  <div class="date" id="rxdate"></div>
+  <div id="rxlist"></div>
+  <div class="rxexames" id="rxexames"></div>
+  <div class="sumpreview" id="rxpreview"></div>
+</div></div>
+<div class="sumbar rxbar" id="rxbar">
+  <div class="suminfo">💊 <b id="rxcount">0</b> medicação(ões) selecionada(s)</div>
+  <div class="sumactions">
+    <button id="rxToggle">Ver prescrição</button>
+    <button id="rxCopy" class="primary">⧉ Copiar prescrição</button>
+  </div>
+</div>
+
 <script>
 /* ---------- helpers para opções ---------- */
 function uni(n){var a=[];for(var i=0;i<=n;i++)a.push([i, i+(i===0?' — ausente':'')]);return a;}
@@ -674,10 +711,79 @@ var META={
  diaz:{ref:'https://www.benzo.org.uk/manual/',mede:'a dose de um benzodiazepínico em mg-equivalentes de diazepam.',quando:'desmame; conversão para um agente de meia-vida longa.',conduta:'converter a dose total em diazepam-equivalente e reduzir gradualmente.'}
 };
 
+/* ---------- base de prescrição (dose inicial · meta · posologia · titulação · monitorização) ---------- */
+var M_ISRS=['Na⁺ em idoso (hiponatremia)','Risco de sangramento se +AINE/anticoagulante','Reavaliar resposta em 2–4 sem'];
+var M_QT=['ECG / QTc (dose-dependente)'];
+var M_METAB=['Peso / IMC + circunferência abdominal','Glicemia / HbA1c','Perfil lipídico','PA'];
+var M_BZD=['Sedação e quedas (idoso)','Risco de dependência — reavaliar tempo de uso','Depressão respiratória com opioide/álcool'];
+var M_STIM=['PA e FC','Peso e altura (crescimento)','Avaliação cardiovascular; ECG se fatores de risco','Sono, apetite e potencial de abuso'];
+var PRESC={
+ 'Sertralina':{cls:'ISRS',s:'50 mg/dia (25 se pânico)',m:'50–200 mg/dia',x:'200 mg/dia',p:'VO 1x/dia (manhã)',t:'↑ 50 mg a cada 1–2 sem conforme resposta',mon:M_ISRS},
+ 'Escitalopram':{cls:'ISRS',s:'10 mg/dia',m:'10–20 mg/dia',x:'20 mg/dia (idoso 10)',p:'VO 1x/dia',t:'↑ 20 mg após 2–4 sem',mon:M_ISRS.concat(M_QT)},
+ 'Fluoxetina':{cls:'ISRS',s:'20 mg/dia',m:'20–80 mg/dia',x:'80 mg/dia',p:'VO 1x/dia (manhã)',t:'↑ após 3–4 sem',mon:M_ISRS},
+ 'Paroxetina':{cls:'ISRS',s:'20 mg/dia',m:'20–50 mg/dia',x:'60 mg/dia',p:'VO 1x/dia',t:'↑ 10 mg/sem',mon:M_ISRS.concat(['Retirada gradual (descontinuação intensa)'])},
+ 'Citalopram':{cls:'ISRS',s:'20 mg/dia',m:'20–40 mg/dia',x:'40 mg/dia (idoso 20)',p:'VO 1x/dia',t:'↑ 40 mg após ~1 sem',mon:M_ISRS.concat(M_QT)},
+ 'Fluvoxamina':{cls:'ISRS',s:'50 mg/dia',m:'100–300 mg/dia',x:'300 mg/dia',p:'VO 1–2x/dia',t:'↑ 50 mg/sem',mon:M_ISRS.concat(['Interações CYP1A2 (↑ clozapina/olanzapina)'])},
+ 'Venlafaxina XR':{cls:'IRSN',s:'75 mg/dia (37,5 se sensível)',m:'75–225 mg/dia',x:'375 mg/dia',p:'VO 1x/dia',t:'↑ 75 mg a cada ≥4 dias',mon:['PA (dose-dependente)','Na⁺ em idoso','Retirada gradual']},
+ 'Desvenlafaxina':{cls:'IRSN',s:'50 mg/dia',m:'50–100 mg/dia',x:'100 mg/dia',p:'VO 1x/dia',t:'dose fixa habitual',mon:['PA','Na⁺ em idoso']},
+ 'Duloxetina':{cls:'IRSN',s:'30–60 mg/dia',m:'60 mg/dia',x:'120 mg/dia',p:'VO 1x/dia',t:'↑ 60 após 1–2 sem',mon:['Transaminases','PA','Evitar em hepatopatia']},
+ 'Bupropiona XL':{cls:'NDRI',s:'150 mg/dia (manhã)',m:'300 mg/dia',x:'450 mg/dia',p:'VO 1x/dia (manhã)',t:'↑ 300 após 1 sem',mon:['PA','Rever limiar convulsivo (CI: epilepsia, transtorno alimentar, abstinência alcoólica)']},
+ 'Mirtazapina':{cls:'NaSSA',s:'15 mg/noite',m:'15–45 mg/dia',x:'45 mg/dia',p:'VO 1x/dia (noite)',t:'↑ 30–45 (dose baixa mais sedativa)',mon:['Peso','Hemograma se sinais de infecção (raro)']},
+ 'Trazodona':{cls:'Sedativo',s:'25–50 mg/noite',m:'150–300 (antidep.) · 25–100 (hipnótico)',x:'600 mg/dia',p:'VO à noite',t:'conforme alvo',mon:['Sedação / ortostase','Risco de priapismo']},
+ 'Vortioxetina':{cls:'Multimodal',s:'5–10 mg/dia',m:'10–20 mg/dia',x:'20 mg/dia',p:'VO 1x/dia',t:'↑ 20',mon:['Náusea']},
+ 'Agomelatina':{cls:'Melatonérgico',s:'25 mg/noite',m:'25–50 mg/dia',x:'50 mg/dia',p:'VO à noite',t:'↑ 50 conforme resposta',mon:['Transaminases: basal, 3, 6, 12 e 24 sem']},
+ 'Clomipramina':{cls:'Tricíclico',s:'25 mg/dia',m:'100–250 mg/dia',x:'250 mg/dia',p:'VO (fracionado → noite)',t:'↑ gradual',mon:['ECG basal','Anticolinérgicos / ortostase','Cardiotóxico em overdose']},
+ 'Risperidona':{cls:'Antipsicótico 2ªG',s:'1–2 mg/dia',m:'2–6 mg/dia',x:'8 mg/dia',p:'VO 1–2x/dia',t:'↑ 1–2 mg a cada 1–2 dias',mon:M_METAB.concat(['Prolactina (eleva)','EPS / discinesia tardia'])},
+ 'Olanzapina':{cls:'Antipsicótico 2ªG',s:'5–10 mg/dia',m:'10–20 mg/dia',x:'20 mg/dia',p:'VO 1x/dia (noite)',t:'↑ 5 mg',mon:M_METAB.concat(['Prolactina se sintomas'])},
+ 'Quetiapina':{cls:'Antipsicótico 2ªG',s:'25–50 mg',m:'300–800 (psicose) · 300 (dep. bipolar)',x:'800 mg/dia',p:'VO 1–2x/dia (maior à noite)',t:'↑ rápido conforme tolerância',mon:M_METAB},
+ 'Aripiprazol':{cls:'Antipsicótico 2ªG',s:'10–15 mg/dia (augment. 2,5–5)',m:'10–30 mg/dia',x:'30 mg/dia',p:'VO 1x/dia',t:'↑ após ≥2 sem',mon:M_METAB.concat(['Acatisia'])},
+ 'Ziprasidona':{cls:'Antipsicótico 2ªG',s:'40 mg 2x/dia',m:'80–160 mg/dia',x:'160 mg/dia',p:'VO 2x/dia com alimento',t:'↑ conforme resposta',mon:M_METAB.concat(M_QT)},
+ 'Paliperidona':{cls:'Antipsicótico 2ªG',s:'6 mg/dia',m:'3–12 mg/dia',x:'12 mg/dia',p:'VO 1x/dia (manhã)',t:'↑ 3 mg',mon:M_METAB.concat(['Prolactina (eleva)'])},
+ 'Lurasidona':{cls:'Antipsicótico 2ªG',s:'40 mg/dia',m:'40–160 mg/dia',x:'160 mg/dia',p:'VO 1x/dia com refeição ≥350 kcal',t:'↑ conforme resposta',mon:M_METAB},
+ 'Clozapina':{cls:'Antipsic. (refratário)',s:'12,5 mg/dia',m:'300–450 mg/dia',x:'900 mg/dia',p:'VO fracionado (maior à noite)',t:'↑ lenta ~25–50 mg/dia',mon:['Hemograma / ANC: semanal (18 sem) → mensal','ECG + troponina/PCR (miocardite) no início','Peso/IMC, glicemia, lipídios','PA e FC','Sinais de íleo / sialorreia / convulsão']},
+ 'Haloperidol':{cls:'Antipsicótico 1ªG',s:'VO 1–5 mg/dia (agitação IM 2,5–5)',m:'5–10 mg/dia',x:'20 mg/dia',p:'VO 1–2x/dia',t:'↑ conforme resposta',mon:['ECG / QTc','EPS (alta incidência)','Prolactina']},
+ 'Clorpromazina':{cls:'Antipsicótico 1ªG',s:'25–100 mg/dia',m:'até 800 mg/dia',x:'800 mg/dia',p:'VO fracionado',t:'↑ conforme resposta',mon:['PA (hipotensão)','ECG / QTc','Sedação / anticolinérgico']},
+ 'Lítio':{cls:'Estabilizador',s:'300 mg/dia (ajustar por litemia)',m:'litemia 0,6–0,8 (manut.) · 0,8–1,2 (agudo)',x:'conforme litemia',p:'VO 1–2x/dia',t:'reavaliar litemia 5 dias após cada ajuste',mon:['Litemia (5 dias após ajuste; depois periódica)','Função renal (Cr, TFG)','TSH ± cálcio','ECG se >40a / cardiopatia','β-hCG / contracepção','Peso']},
+ 'Valproato / Divalproato':{cls:'Estabilizador',s:'250–500 mg/dia (~20–30 mg/kg)',m:'nível 50–125 µg/mL',x:'conforme nível/tolerância',p:'VO 2–3x/dia',t:'↑ conforme nível',mon:['Nível sérico (50–125)','Hemograma + plaquetas','Transaminases','β-hCG / contracepção (teratogênico)','Peso','Amônia se letargia']},
+ 'Carbamazepina':{cls:'Estabilizador',s:'200 mg/dia',m:'nível 4–12 µg/mL',x:'conforme nível',p:'VO 2x/dia',t:'↑ 200 mg',mon:['Nível sérico (4–12)','Hemograma (discrasias)','Na⁺ (hiponatremia)','Transaminases','HLA-B*1502 em asiáticos (SJS)']},
+ 'Lamotrigina':{cls:'Estabilizador',s:'25 mg/dia',m:'100–200 mg/dia (até 400)',x:'conforme esquema',p:'VO 1x/dia',t:'25→50→100→200 (METADE com valproato; DOBRO com indutor)',mon:['Vigiar rash / Stevens-Johnson — NÃO acelerar','Reiniciar titulação se parar >5 dias']},
+ 'Diazepam':{cls:'Benzodiazepínico',s:'5–10 mg',m:'conforme indicação',x:'conforme protocolo',p:'VO / IV',t:'menor tempo possível; desmame gradual',mon:M_BZD},
+ 'Clonazepam':{cls:'Benzodiazepínico',s:'0,25–0,5 mg',m:'0,5–2 mg/dia',x:'conforme resposta',p:'VO 1–2x/dia',t:'menor tempo possível; desmame',mon:M_BZD},
+ 'Lorazepam':{cls:'Benzodiazepínico',s:'0,5–1 mg',m:'conforme indicação',x:'conforme protocolo',p:'VO / IM',t:'desmame gradual',mon:M_BZD},
+ 'Alprazolam':{cls:'Benzodiazepínico',s:'0,25–0,5 mg',m:'conforme indicação',x:'conforme protocolo',p:'VO',t:'alto risco de dependência; desmame',mon:M_BZD},
+ 'Zolpidem':{cls:'Z-drug',s:'5–10 mg/noite',m:'5–10 mg',x:'10 mg/noite',p:'VO ao deitar',t:'uso curto',mon:['Comportamentos do sono','Dependência — uso curto']},
+ 'Buspirona':{cls:'Ansiolítico',s:'7,5 mg 2x/dia',m:'15–30 mg/dia',x:'60 mg/dia',p:'VO 2x/dia',t:'↑ gradual; latência de semanas',mon:['Latência de semanas — não é “se necessário”']},
+ 'Metilfenidato IR':{cls:'Estimulante',s:'5–10 mg',m:'conforme resposta',x:'conforme resposta',p:'VO 2–3x/dia',t:'↑ semanal',mon:M_STIM},
+ 'Metilfenidato LA/OROS':{cls:'Estimulante',s:'18–20 mg',m:'conforme resposta',x:'~54–72 mg/dia',p:'VO 1x/dia (manhã)',t:'↑ semanal',mon:M_STIM},
+ 'Lisdexanfetamina':{cls:'Estimulante',s:'30 mg',m:'30–70 mg/dia',x:'70 mg/dia',p:'VO 1x/dia (manhã)',t:'↑ 10–20 mg/sem',mon:M_STIM},
+ 'Atomoxetina':{cls:'Não-estimulante',s:'40 mg/dia',m:'80–100 mg/dia',x:'100 mg/dia',p:'VO 1x/dia',t:'↑ 80 após 1 sem',mon:['PA e FC','Função hepática se sintomas','Ideação suicida no início','Latência de semanas']},
+ 'Naltrexona':{cls:'Anticraving',s:'50 mg/dia VO (ou 380 mg IM/mês)',m:'50 mg/dia',x:'50 mg/dia',p:'VO 1x/dia',t:'iniciar após 7–10 dias sem opioide',mon:['Função hepática','Confirmar 7–10 dias sem opioide (abstinência precipitada)']},
+ 'Acamprosato':{cls:'Anticraving',s:'666 mg 3x/dia',m:'1998 mg/dia',x:'1998 mg/dia',p:'VO 3x/dia',t:'manutenção',mon:['Função renal (ajustar)']},
+ 'Dissulfiram':{cls:'Aversivo',s:'250 mg/dia',m:'250 mg/dia',x:'500 mg/dia',p:'VO 1x/dia',t:'após abstinência prévia',mon:['Função hepática','Confirmar abstinência (reação com álcool)']},
+ 'Vareniclina':{cls:'Cessação tabágica',s:'0,5 mg/dia',m:'1 mg 2x/dia',x:'1 mg 2x/dia',p:'0,5×3d → 0,5 2x×4d → 1 mg 2x',t:'iniciar 1–2 sem antes de parar',mon:['Humor / ideação suicida','Náusea']},
+ 'Bupropiona':{cls:'Cessação tabágica',s:'150 mg/dia',m:'300 mg/dia',x:'300 mg/dia',p:'VO 1–2x/dia',t:'↑ 300 após alguns dias; parar de fumar em 1–2 sem',mon:['PA','↓ limiar convulsivo']}
+};
+
 /* ---------- render ---------- */
 var grid=document.getElementById('grid'), noresults=document.getElementById('noresults');
 function el(t,c,h){var e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;}
-function optsHTML(opts){return '<div class="opts">'+opts.map(function(o){return '<button type="button" class="opt" data-val="'+o[0]+'">'+o[1]+'</button>';}).join('')+'</div>';}
+function sevRamp(t){ // t 0..1 → verde → âmbar → vermelho
+  var g=[44,107,71],a=[180,87,28],r=[143,50,33],c;
+  if(t<=0.5){var k=t/0.5;c=[g[0]+(a[0]-g[0])*k,g[1]+(a[1]-g[1])*k,g[2]+(a[2]-g[2])*k];}
+  else{var k2=(t-0.5)/0.5;c=[a[0]+(r[0]-a[0])*k2,a[1]+(r[1]-a[1])*k2,a[2]+(r[2]-a[2])*k2];}
+  return c;
+}
+function rgbS(c){return 'rgb('+Math.round(c[0])+','+Math.round(c[1])+','+Math.round(c[2])+')';}
+function mixPaper(c,amt){var p=[244,241,232];return rgbS([c[0]+(p[0]-c[0])*amt,c[1]+(p[1]-c[1])*amt,c[2]+(p[2]-c[2])*amt]);}
+function optsHTML(opts){
+  var vals=opts.map(function(o){return o[0];});
+  var mn=Math.min.apply(null,vals),mx=Math.max.apply(null,vals),rng=(mx-mn)||1;
+  return '<div class="opts">'+opts.map(function(o){
+    var t=(o[0]-mn)/rng,c=sevRamp(t);
+    var st='--c:'+rgbS(c)+';--ct:'+mixPaper(c,0.87)+';--cb:'+mixPaper(c,0.55)+';--ctx:'+mixPaper(c,0.12);
+    return '<button type="button" class="opt" data-val="'+o[0]+'" style="'+st+'">'+o[1]+'</button>';
+  }).join('')+'</div>';
+}
 function plain(x){return String(x).replace(/<[^>]*>/g,'').replace(/\s+/g,' ').trim();}
 
 SCALES.forEach(function(s){
@@ -855,6 +961,7 @@ function resetCard(card,s){
 
 /* ---------- resumo geral ---------- */
 var sumbar=document.getElementById('sumbar'),sumpanel=document.getElementById('sumpanel');
+var currentMode='escores';
 function todayStr(){var d=new Date();return d.toLocaleDateString('pt-BR')+' '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});}
 function collected(){
   var out=[];
@@ -868,8 +975,9 @@ function summaryText(){
 function refreshSummary(){
   var c=collected();
   document.getElementById('sumcount').textContent=c.length;
-  sumbar.classList.toggle('show',c.length>0);
-  if(c.length===0){sumpanel.classList.remove('show');document.getElementById('sumToggle').textContent='Ver resumo';}
+  var show=(currentMode==='escores'&&c.length>0);
+  sumbar.classList.toggle('show',show);
+  if(!show){sumpanel.classList.remove('show');document.getElementById('sumToggle').textContent='Ver resumo';}
   if(sumpanel.classList.contains('show'))renderPanel();
 }
 function renderPanel(){
@@ -886,14 +994,14 @@ document.getElementById('sumCopy').addEventListener('click',function(){var t=sum
 
 /* ---------- troca de modo (Escores / Guia) ---------- */
 function setMode(mode){
+  currentMode=mode;
   document.querySelectorAll('.mtab').forEach(function(b){b.classList.toggle('active',b.dataset.mode===mode);});
   document.getElementById('subEscores').hidden=mode!=='escores';
   document.getElementById('subGuia').hidden=mode!=='guia';
   document.getElementById('grid').hidden=mode!=='escores';
   document.getElementById('guide').hidden=mode!=='guia';
-  document.getElementById('sumbar').style.display=(mode==='escores')?'':'none';
-  if(mode!=='escores')document.getElementById('sumpanel').classList.remove('show');
-  else refreshSummary();
+  refreshSummary();
+  refreshRx();
   window.scrollTo({top:0});
 }
 document.getElementById('tabs').addEventListener('click',function(e){
@@ -935,6 +1043,71 @@ gsearch.addEventListener('input',function(){
   gcount.textContent=q?(total+' resultado'+(total===1?'':'s')):'';
   gnote.style.display=(q&&total===0)?'block':'none';
 });
+
+/* ---------- prescrição (selecionar fármaco no guia → esquema + monitorização) ---------- */
+var rx={};
+function injectRxButtons(){
+  document.querySelectorAll('#guide tbody tr').forEach(function(tr){
+    var c0=tr.cells[0];if(!c0)return;
+    var name=c0.textContent.trim();
+    if(PRESC[name]&&!c0.querySelector('.rxadd')){
+      var b=document.createElement('button');b.type='button';b.className='rxadd';b.dataset.drug=name;b.textContent='+ Rx';
+      b.addEventListener('click',function(e){e.stopPropagation();toggleRx(name,b);});
+      c0.appendChild(b);
+    }
+  });
+}
+function toggleRx(name,btn){
+  if(rx[name]){delete rx[name];}
+  else{var d=PRESC[name];rx[name]={cls:d.cls||'',start:d.s,meta:d.m,max:d.x,posol:d.p,titr:d.t,mon:d.mon||[]};}
+  syncRxBtn(name);refreshRx();
+}
+function syncRxBtn(name){
+  document.querySelectorAll('.rxadd').forEach(function(b){
+    if(b.dataset.drug===name){var on=!!rx[name];b.classList.toggle('on',on);b.textContent=on?'✓ Rx':'+ Rx';}
+  });
+}
+function rxAllExams(){var all=[];Object.keys(rx).forEach(function(n){(rx[n].mon||[]).forEach(function(m){if(all.indexOf(m)<0)all.push(m);});});return all;}
+function rxText(){
+  var keys=Object.keys(rx);if(!keys.length)return '';
+  var L=['PRESCRIÇÃO PROPOSTA — '+todayStr()];
+  keys.forEach(function(n){var d=rx[n];
+    L.push('• '+n+(d.cls?' ('+d.cls+')':'')+' — iniciar '+d.start+'; meta '+d.meta+(d.max?'; máx '+d.max:'')+'; '+d.posol);
+    if(d.titr)L.push('   Titulação: '+d.titr);
+  });
+  var ex=rxAllExams();
+  if(ex.length){L.push('');L.push('EXAMES / MONITORIZAÇÃO:');ex.forEach(function(m){L.push('- '+m);});}
+  return L.join('\n');
+}
+function fld(n,f,label,val){return '<label>'+label+'<input data-drug="'+n.replace(/"/g,'&quot;')+'" data-f="'+f+'" value="'+String(val).replace(/"/g,'&quot;')+'"></label>';}
+function renderRx(){
+  document.getElementById('rxdate').textContent='Gerado em '+todayStr();
+  var keys=Object.keys(rx),list=document.getElementById('rxlist');
+  if(!keys.length){list.innerHTML='<div class="sumempty">Nenhuma medicação selecionada. No <b>Guia rápido</b>, toque em <b>+ Rx</b> ao lado de um fármaco.</div>';document.getElementById('rxexames').innerHTML='';document.getElementById('rxpreview').textContent='';return;}
+  list.innerHTML=keys.map(function(n){var d=rx[n];
+    return '<div class="rxitem"><div class="rxh"><b>'+n+'</b>'+(d.cls?'<span class="rxcls">'+d.cls+'</span>':'')+'<button class="rxrm" data-drug="'+n.replace(/"/g,'&quot;')+'">remover</button></div>'+
+      '<div class="rxf">'+fld(n,'start','Iniciar',d.start)+fld(n,'meta','Dose-meta',d.meta)+fld(n,'max','Máx',d.max)+fld(n,'posol','Posologia',d.posol)+'</div>'+
+      '<div class="rxt"><b>Titulação:</b> '+d.titr+'</div>'+
+      (d.mon&&d.mon.length?'<div class="rxmon"><b>Monitorar:</b><ul>'+d.mon.map(function(m){return '<li>'+m+'</li>';}).join('')+'</ul></div>':'')+
+      '</div>';
+  }).join('');
+  var ex=rxAllExams();
+  document.getElementById('rxexames').innerHTML=ex.length?'<h4>🧪 Exames / monitorização (consolidado)</h4><ul>'+ex.map(function(m){return '<li>'+m+'</li>';}).join('')+'</ul>':'';
+  document.getElementById('rxpreview').textContent=rxText();
+  list.querySelectorAll('.rxf input').forEach(function(i){i.addEventListener('input',function(){var n=this.dataset.drug;if(rx[n]){rx[n][this.dataset.f]=this.value;document.getElementById('rxpreview').textContent=rxText();}});});
+  list.querySelectorAll('.rxrm').forEach(function(b){b.addEventListener('click',function(){var n=this.dataset.drug;delete rx[n];syncRxBtn(n);refreshRx();});});
+}
+function refreshRx(){
+  var keys=Object.keys(rx);
+  document.getElementById('rxcount').textContent=keys.length;
+  var show=(currentMode==='guia'&&keys.length>0);
+  document.getElementById('rxbar').classList.toggle('show',show);
+  if(!show){document.getElementById('rxpanel').classList.remove('show');document.getElementById('rxToggle').textContent='Ver prescrição';}
+  if(document.getElementById('rxpanel').classList.contains('show'))renderRx();
+}
+document.getElementById('rxToggle').addEventListener('click',function(){var p=document.getElementById('rxpanel');var open=p.classList.toggle('show');this.textContent=open?'Ocultar':'Ver prescrição';if(open)renderRx();});
+document.getElementById('rxCopy').addEventListener('click',function(){var t=rxText();if(t)doCopy(t,this,'⧉ Copiar prescrição');});
+injectRxButtons();
 </script>
 </body>
 </html>
