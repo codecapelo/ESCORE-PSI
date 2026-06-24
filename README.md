@@ -4,10 +4,11 @@ Aplicativo de página única (HTML puro, sem dependências) para **preencher e c
 
 ➡️ **É só abrir o [`index.html`](index.html) no navegador** (duplo-clique). Nada é salvo — recarregar limpa tudo.
 
-## Dois modos
+## Três modos
 
 - **📋 Escores** — preenchimento por toque nas opções, pontuação e interpretação automáticas, cópia individual por escala e um botão **Copiar resumo** que junta todos os escores completos para o prontuário.
 - **💊 Guia rápido** — guia de psicofarmacologia (doses, titulação, combinações e potencialização) com navegação por seção e busca de fármaco.
+- **🧠 Estado Mental** — painel de redação do EEM: abre no padrão de normalidade, altere só os desvios e o exame se monta ao lado, pronto para copiar. 14 domínios em 3 blocos (observação → cognição → psiquismo) e padrões por condição (depressão, mania, psicose, delirium, etc.).
 
 ## Escalas e calculadoras
 
