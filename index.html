@@ -12,7 +12,7 @@
     --paper:#f4f1e8;--paper-2:#efeadd;--ink:#1d231f;--ink-soft:#525c54;--line:#d8d0bd;
     --surface:#fffdf7;--green:#1f5135;--green-2:#2c6b47;--green-tint:#e6efe6;
     --ok:#2c6b47;--ok-bg:#e3efe5;--mild:#9a6312;--mild-bg:#f6ead2;
-    --mod:#b4571c;--mod-bg:#f7e2cf;--sev:#8f3221;--sev-bg:#f4ddd6;--info:#1f5135;
+    --mod:#b4571c;--mod-bg:#f7e2cf;--sev:#8f3221;--sev-bg:#f4ddd6;--info:#1f5135;--gold:#cba24f;
     --mono:'JetBrains Mono',ui-monospace,monospace;--serif:'Fraunces',Georgia,serif;--sans:'Public Sans',system-ui,sans-serif;
     --shadow:0 1px 2px rgba(29,35,31,.06),0 8px 24px rgba(29,35,31,.07);
   }
@@ -212,6 +212,91 @@
     .sumbar{padding:10px 14px;gap:8px}.sumbar .suminfo{font-size:.78rem}
   }
   @media print{.tabs,.acts,.minib,.sumbar,.sumpanel,.info{display:none}body{background:#fff}#grid{display:block;padding-bottom:0}.card{break-inside:avoid;box-shadow:none;margin-bottom:16px}}
+
+  /* ===== Exame do Estado Mental (aba) — estilos escopados em #eem ===== */
+  #eem .eemhead{max-width:1180px;margin:18px auto 4px;padding:0 28px}
+  #eem .eemhead .mark2{font-family:var(--mono);font-size:.62rem;letter-spacing:.28em;text-transform:uppercase;color:var(--green-2);margin-bottom:6px}
+  #eem .eemhead .lead{color:var(--ink-soft);max-width:80ch;font-size:.96rem;margin:0}
+  #eem .bar{position:static;background:transparent;border:0;margin:14px auto 0;max-width:1180px}
+  #eem .bar .inner{max-width:1180px;margin:0 auto;padding:0 28px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  #eem .bar .lbl{font-family:var(--mono);font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;color:var(--green-2);margin-right:4px}
+  #eem .bar .acts{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+  #eem .bar button{font-size:.78rem;font-weight:600;padding:7px 13px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink-soft);cursor:pointer;font-family:var(--sans);transition:.15s}
+  #eem .bar button:hover{border-color:var(--green-2);color:var(--ink)}
+  #eem .bar button.primary{background:var(--green);color:var(--paper);border-color:var(--green)}
+  #eem .bar button.primary:hover{background:var(--green-2)}
+  #eem .bar button.primary.done{background:var(--green-2)}
+  #eem .presets{max-width:1180px;margin:16px auto 0;padding:0 28px}
+  #eem .presets .ph{font-family:var(--mono);font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:var(--green-2);margin-bottom:9px}
+  #eem .pbtns{display:flex;flex-wrap:wrap;gap:8px}
+  #eem .preset{font-size:.8rem;font-weight:600;padding:7px 13px;border-radius:20px;border:1px solid var(--line);background:var(--surface);color:var(--ink-soft);cursor:pointer;font-family:var(--sans);transition:.15s}
+  #eem .preset:hover{border-color:var(--green-2);color:var(--ink)}
+  #eem .preset.active{background:var(--green);color:var(--paper);border-color:var(--green)}
+  #eem .pnote{font-size:.77rem;color:#5d4310;background:var(--mild-bg);border:1px solid #e7cf9f;border-radius:8px;padding:7px 11px;margin-top:10px;max-width:80ch}
+  #eem .panes{max-width:1180px;margin:22px auto 0;padding:0 28px 40px;display:grid;grid-template-columns:1fr 384px;gap:24px;align-items:start}
+  #eem .left{min-width:0}
+  #eem .block{margin-top:26px}
+  #eem .block:first-child{margin-top:0}
+  #eem .blockhead{display:flex;align-items:baseline;gap:12px;margin:0 0 13px}
+  #eem .blockhead .bn{font-family:var(--mono);font-size:.64rem;letter-spacing:.18em;color:var(--green-2);white-space:nowrap}
+  #eem .blockhead h3{font-family:var(--serif);font-weight:600;font-size:1.12rem;margin:0;color:var(--ink);white-space:nowrap}
+  #eem .blockhead .rule{flex:1;height:1px;background:var(--line)}
+  #eem .cardgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;align-items:start}
+  #eem .card{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--line);border-radius:13px;box-shadow:var(--shadow);overflow:hidden;transition:border-color .15s;display:block}
+  #eem .card.s-alt{border-left-color:var(--gold)}
+  #eem .card.s-risk{border-left-color:var(--sev)}
+  #eem .card .head{padding:14px 16px 11px;border-bottom:1px solid var(--line);position:relative}
+  #eem .card .head .cat{font-family:var(--mono);font-size:.6rem;letter-spacing:.2em;color:var(--green-2)}
+  #eem .card .head h2{font-family:var(--serif);font-weight:600;font-size:1.18rem;margin:3px 56px 4px 0;letter-spacing:-.01em}
+  #eem .card .head p{margin:0;font-size:.8rem;color:var(--ink-soft)}
+  #eem .badge{position:absolute;top:13px;right:13px;font-family:var(--mono);font-size:.56rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:20px;margin:0}
+  #eem .badge.ok{background:var(--green-tint);color:var(--green)}
+  #eem .badge.alt{background:var(--mild-bg);color:var(--mild)}
+  #eem .badge.risk{background:var(--sev-bg);color:var(--sev)}
+  #eem .body{padding:11px 16px 15px}
+  #eem .howto{font-size:.79rem;color:var(--ink-soft);background:var(--paper-2);border:1px solid var(--line);border-left:3px solid var(--green-2);border-radius:0 8px 8px 0;padding:7px 10px;margin:0 0 10px}
+  #eem .howto .hk{font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--green);display:block;margin-bottom:2px}
+  #eem .glab{font-family:var(--mono);font-size:.6rem;letter-spacing:.13em;text-transform:uppercase;color:var(--green-2);margin:11px 0 5px}
+  #eem .glab:first-of-type{margin-top:2px}
+  #eem .chips{display:flex;flex-wrap:wrap;gap:6px}
+  #eem .chip{display:inline-block;font-size:.77rem;line-height:1.25;padding:5px 10px;border-radius:18px;border:1px solid var(--line);background:var(--paper);color:var(--ink-soft);cursor:pointer;transition:.12s;user-select:none}
+  #eem .chip:hover{border-color:var(--green-2);color:var(--ink)}
+  #eem .chip.on{background:var(--green);color:var(--paper);border-color:var(--green)}
+  #eem .chip.isdef{border-style:dashed}
+  #eem .chip.risk{border-color:#d9a99c;color:var(--sev)}
+  #eem .chip.risk:hover{border-color:var(--sev)}
+  #eem .chip.risk.on{background:var(--sev);border-color:var(--sev);color:#fff;border-style:solid}
+  #eem .add{width:100%;margin-top:10px;font-family:var(--sans);font-size:.81rem;padding:7px 9px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);outline:none;transition:.15s}
+  #eem .add:focus{border-color:var(--green-2);box-shadow:0 0 0 3px var(--green-tint)}
+  #eem .add::placeholder{color:#9aa39b}
+  #eem .side{position:sticky;top:64px;align-self:start}
+  #eem .sidepanel{background:var(--surface);border:1px solid var(--green-2);border-radius:13px;box-shadow:var(--shadow);overflow:hidden}
+  #eem .sidepanel .sh{padding:13px 16px 11px;border-bottom:1px solid var(--line)}
+  #eem .sidepanel .sh .cat{font-family:var(--mono);font-size:.59rem;letter-spacing:.16em;text-transform:uppercase;color:var(--green-2)}
+  #eem .sidepanel .sh h2{font-family:var(--serif);font-weight:600;font-size:1.22rem;margin:2px 0 7px}
+  #eem .statusline{font-size:.78rem;color:var(--ink-soft)}
+  #eem .statusline .pill{display:inline-block;font-family:var(--mono);font-size:.6rem;font-weight:700;padding:2px 7px;border-radius:12px;margin-right:6px;letter-spacing:.04em}
+  #eem .pill.ok{background:var(--green-tint);color:var(--green)}
+  #eem .pill.alt{background:var(--mild-bg);color:var(--mild)}
+  #eem .pill.risk{background:var(--sev-bg);color:var(--sev)}
+  #eem #out{margin:0;padding:14px 16px;white-space:pre-wrap;font-family:var(--sans);font-size:.86rem;line-height:1.6;color:var(--ink);max-height:48vh;overflow:auto}
+  #eem .sidepanel .sf{padding:11px 16px;border-top:1px solid var(--line)}
+  #eem .bigcopy{width:100%;font-size:.85rem;font-weight:700;padding:10px 16px;border-radius:9px;border:1px solid var(--green);background:var(--green);color:var(--paper);cursor:pointer;font-family:var(--sans);transition:.15s}
+  #eem .bigcopy:hover{background:var(--green-2)}
+  #eem .bigcopy.done{background:var(--green-2)}
+  #eem .eemfoot{max-width:1180px;margin:0 auto;padding:0 28px 60px;font-size:.77rem;color:var(--ink-soft);line-height:1.5}
+  #eem .eemfoot b{color:var(--ink)}
+  @media(max-width:1023px){
+    #eem .panes{grid-template-columns:1fr}
+    #eem .side{position:static;margin-top:8px}
+    #eem #out{max-height:none}
+  }
+  @media(max-width:760px){
+    #eem .eemhead,#eem .presets,#eem .eemfoot{padding-left:16px;padding-right:16px}
+    #eem .bar .inner{padding:0 16px}
+    #eem .panes{padding:0 16px 40px}
+  }
+  @media print{#eem .bar,#eem .presets,#eem .add,#eem .side{display:none}#eem .panes{display:block}#eem .card{break-inside:avoid;box-shadow:none}}
 </style>
 </head>
 <body>
@@ -227,6 +312,7 @@
   <div class="inner moderow">
     <button class="mtab active" data-mode="escores">📋 Escores</button>
     <button class="mtab" data-mode="guia">💊 Guia rápido</button>
+    <button class="mtab" data-mode="eem">🧠 Estado Mental</button>
     <span class="acts"><button onclick="window.print()">Imprimir</button></span>
   </div>
   <div class="inner subnav" id="subEscores">
@@ -475,6 +561,45 @@
     </tbody></table></div>
   </section>
   <div class="guidenote" id="guidenote">Nenhum fármaco encontrado.</div>
+</main>
+
+<main id="eem" hidden>
+  <div class="eemhead">
+    <div class="mark2">Semiologia psiquiátrica · exame do estado mental</div>
+    <p class="lead">Painel de redação à beira-leito. Abre no padrão de normalidade — altere só os desvios e o EEM se monta ao lado, pronto para copiar. Cada domínio mostra o que observar e como preencher; os padrões por condição pré-selecionam o quadro típico. Nada é salvo; recarregar limpa tudo.</p>
+  </div>
+  <div class="disclaimer"><div><span>⚠️</span><div><b>Apoio à redação clínica.</b> O EEM é a fotografia do momento — descreva o achado, não o diagnóstico (a interpretação vai na formulação). Os padrões não preenchem ideação suicida/heteroagressiva: registre o risco individualmente. Versão de trabalho; para registro formal/escalas, use o instrumento validado.</div></div></div>
+
+  <div class="bar"><div class="inner">
+    <span class="lbl">Ações</span>
+    <button id="btnReset">Reiniciar (normal)</button>
+    <span class="acts"><button class="primary" id="btnCopyTop">Copiar EEM</button></span>
+  </div></div>
+
+  <div class="presets">
+    <div class="ph">Padrões por condição — selecione e ajuste</div>
+    <div class="pbtns" id="pbtns"></div>
+    <div class="pnote"><b>Os padrões são ponto de partida.</b> Definem a fenomenologia típica do quadro; <b>não marcam ideação suicida/heteroagressiva</b> nem rebaixam risco histórico — registre o risco caso a caso. Apresentação tranquila não reduz o risco de uma tentativa recente.</div>
+  </div>
+
+  <div class="panes">
+    <div class="left" id="left"></div>
+    <aside class="side">
+      <div class="sidepanel">
+        <div class="sh">
+          <div class="cat">Saída — padrão: <span id="presetlabel">normal</span></div>
+          <h2>EEM montado</h2>
+          <div class="statusline" id="statusline"></div>
+        </div>
+        <pre id="out"></pre>
+        <div class="sf"><button class="bigcopy" id="btnCopySide">Copiar EEM</button></div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="eemfoot">
+    Ordem convencional do exame, em três blocos (observação → cognição → psiquismo). O selo de cada domínio (<b>normal</b> / <b>alterado</b> / <b>risco</b>) e a barra lateral resumem o estado de preenchimento. Para registro formal e escalas, use o instrumento oficial validado.
+  </div>
 </main>
 
 <footer>Versões de trabalho para uso à beira-leito · confirmar condutas conforme protocolo do serviço, bula e julgamento clínico.</footer>
@@ -973,7 +1098,7 @@ var currentMode='escores';
 function todayStr(){var d=new Date();return d.toLocaleDateString('pt-BR')+' '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});}
 function collected(){
   var out=[];
-  document.querySelectorAll('.card').forEach(function(c){if(c._sumLine)out.push({line:c._sumLine,level:c._sumLevel||'info'});});
+  document.querySelectorAll('#grid .card').forEach(function(c){if(c._sumLine)out.push({line:c._sumLine,level:c._sumLevel||'info'});});
   return out;
 }
 function summaryText(){
@@ -1008,6 +1133,7 @@ function setMode(mode){
   document.getElementById('subGuia').hidden=mode!=='guia';
   document.getElementById('grid').hidden=mode!=='escores';
   document.getElementById('guide').hidden=mode!=='guia';
+  document.getElementById('eem').hidden=mode!=='eem';
   refreshSummary();
   refreshRx();
   window.scrollTo({top:0});
@@ -1020,7 +1146,7 @@ document.getElementById('tabs').addEventListener('click',function(e){
 var activeCat='all',query='';
 function applyFilter(){
   var shown=0;
-  document.querySelectorAll('.card').forEach(function(card){
+  document.querySelectorAll('#grid .card').forEach(function(card){
     var okCat=(activeCat==='all'||card.dataset.cat===activeCat);
     var okQ=(!query||card.dataset.search.indexOf(query)>-1);
     var vis=okCat&&okQ;card.style.display=vis?'':'none';if(vis)shown++;
@@ -1160,6 +1286,320 @@ function refreshRx(){
 document.getElementById('rxToggle').addEventListener('click',function(){var p=document.getElementById('rxpanel');var open=p.classList.toggle('show');this.textContent=open?'Ocultar':'Ver prescrição';if(open)renderRx();});
 document.getElementById('rxCopy').addEventListener('click',function(){var t=rxText();if(t)doCopy(t,this,'⧉ Copiar prescrição');});
 injectRxButtons();
+</script>
+
+<script>
+/* ===== Exame do Estado Mental (aba) — lógica isolada em IIFE ===== */
+(function(){
+const ROOT=document.getElementById('eem');
+
+/* ===== marcação ===== */
+const N = t => ({t, n:1});   // normal (default + normal exclusivo)
+const R = t => ({t, r:1});   // achado de risco
+const nm = o => (typeof o==='string') ? {t:o} : o;
+
+/* ===== domínios (ordem por blocos) =====
+   gtype: 'single' (radio) · 'multiX' (normal exclusivo, achados combinam) · 'multi' (livre)
+   out:   'single' | 'join' | 'segments' | 'thought'                                        */
+const DOM = [
+ /* ---------- BLOCO I — OBSERVAÇÃO ---------- */
+ {block:1, num:'01', id:'aspecto', name:'Aspecto geral', obs:'Idade aparente, higiene, autocuidado, vestuário, contato visual e postura.',
+  howto:'Cada eixo já vem normal; troque o que se aplica.', out:'join', label:'Apresentação',
+  g:[
+   {gid:'higiene', gtype:'single', glabel:'Higiene / autocuidado', o:[N('higiene e vestuário adequados'),'descuidado / desleixo','bizarro / extravagante']},
+   {gid:'idade', gtype:'single', glabel:'Idade aparente', o:[N('idade aparente compatível com a real'),'idade aparente maior que a real']},
+   {gid:'contato', gtype:'single', glabel:'Contato visual', o:[N('contato visual preservado'),'contato visual evitativo','contato visual fixo']},
+   {gid:'postura', gtype:'single', glabel:'Postura', o:[N('postura sem alterações'),'postura rígida','postura encurvada','postura relaxada']},
+   {gid:'sinais', gtype:'multi', glabel:'Sinais físicos (opcional)', o:['sinais de uso de substância (marcas/lesões)']},
+  ]},
+
+ {block:1, num:'02', id:'consciencia', name:'Nível de consciência', obs:'Grau de alerta e clareza do sensório.',
+  howto:'Rebaixamento flutuante desvia para investigação de delirium.', out:'single', label:'Consciência',
+  g:[{gid:'consciencia', gtype:'single', o:[N('vigil'),'sonolência','obnubilação','torpor','estupor','rebaixamento flutuante (sugere delirium)','estreitamento (estado crepuscular)','hipervigilância']}]},
+
+ {block:1, num:'03', id:'atitude', name:'Atitude e psicomotricidade', obs:'Como se relaciona com o examinador e a atividade motora.',
+  howto:'Um descritor de atitude e um de psicomotricidade.', out:'segments',
+  g:[
+   {gid:'atitude', gtype:'single', glabel:'Atitude', outKey:'Atitude', o:[N('cooperativa'),'colaborativa parcial','hostil','desconfiada / suspicaz','arredia','sedutora','querelante','indiferente','regredida']},
+   {gid:'psicomotr', gtype:'single', glabel:'Psicomotricidade', outKey:'Psicomotricidade', o:[N('normal'),'agitação psicomotora','lentificação','inquietação','estupor (imobilidade)','maneirismos','estereotipias','tiques','ecopraxia','negativismo','flexibilidade cérea']},
+  ]},
+
+ /* ---------- BLOCO II — FUNÇÕES COGNITIVAS ---------- */
+ {block:2, num:'04', id:'orientacao', name:'Orientação', obs:'Autopsíquica (quem é) e alopsíquica (tempo / espaço / situação).',
+  howto:'A desorientação temporal é a mais precoce; pode marcar mais de uma esfera.', out:'single', label:'Orientação',
+  g:[{gid:'orientacao', gtype:'multiX', o:[N('orientado em tempo, espaço e pessoa (auto e alopsiquicamente)'),'desorientação temporal','desorientação espacial','desorientação quanto a pessoas','desorientação autopsíquica','desorientação flutuante (sugere delirium)']}]},
+
+ {block:2, num:'05', id:'atencao', name:'Atenção', obs:'Capacidade de dirigir (tenacidade) e manter (vigilância) o foco.',
+  howto:'Teste com 100−7 ou repetição de dígitos antes de marcar.', out:'single', label:'Atenção',
+  g:[{gid:'atencao', gtype:'single', o:[N('normoprosexia'),'hipoprosexia','hiperprosexia','distratibilidade','aprosexia']}]},
+
+ {block:2, num:'06', id:'memoria', name:'Memória', obs:'Imediata (dígitos), recente (3 palavras / fatos do dia) e remota.',
+  howto:'Atenção ruim contamina a memória; cheque 3 palavras após minutos.', out:'single', label:'Memória',
+  g:[{gid:'memoria', gtype:'multiX', o:[N('imediata, recente e remota preservadas'),'amnésia anterógrada','amnésia retrógrada','amnésia lacunar','confabulação','hipermnésia','paramnésias (déjà vu / jamais vu)','falsas memórias']}]},
+
+ {block:2, num:'07', id:'inteligencia', name:'Inteligência', obs:'Vocabulário, abstração e fundo de conhecimento vs. escolaridade.',
+  howto:'Estimativa clínica; déficit/declínio pedem instrumento próprio.', out:'single', label:'Inteligência',
+  g:[{gid:'inteligencia', gtype:'single', o:[N('compatível com a escolaridade'),'indícios de déficit intelectual','declínio cognitivo (rastrear com instrumento próprio)']}]},
+
+ /* ---------- BLOCO III — PSIQUISMO, HUMOR E JUÍZO ---------- */
+ {block:3, num:'08', id:'senso', name:'Senso-percepção', obs:'Alterações da percepção, com e sem estímulo.',
+  howto:'Registre ativamente, mesmo sem alterações. Visuais sugerem causa orgânica.', out:'single', label:'Senso-percepção',
+  g:[{gid:'sensopercepcao', gtype:'multiX', o:[N('sem ilusões ou alucinações'),'ilusões','alucinações auditivas','vozes comentadoras','vozes comandadoras','vozes dialogadas','alucinações visuais','alucinações táteis / hápticas (delírio dermatozoico)','alucinações olfativas','alucinações gustativas','alucinações cenestésicas','pseudoalucinações','despersonalização','desrealização']}]},
+
+ {block:3, num:'09', id:'pensamento', name:'Pensamento', obs:'Três eixos: curso (velocidade), forma (organização) e conteúdo.',
+  howto:'Marque em cada eixo; a ideação suicida/homicida deve ser sempre registrada.', out:'thought',
+  g:[
+   {gid:'curso', gtype:'single', glabel:'Curso', outKey:'curso', o:[N('normal'),'acelerado / taquipsiquismo','fuga de ideias','lentificado / bradipsiquismo','bloqueio','prolixidade']},
+   {gid:'forma', gtype:'multiX', glabel:'Forma', outKey:'forma', o:[N('lógica e coerente'),'circunstancialidade','tangencialidade','afrouxamento das associações','descarrilamento','salada de palavras','neologismos','perseveração','ecolalia','pensamento concreto']},
+   {gid:'conteudo', gtype:'multiX', glabel:'Conteúdo', outKey:'conteúdo', o:[N('sem delírios ou ideação suicida/homicida'),'delírio persecutório','delírio de referência','delírio de grandeza','delírio de culpa','delírio de ruína','delírio niilista','delírio somático / hipocondríaco','delírio místico-religioso','delírio de ciúme','delírio erotomaníaco','delírio de controle / influência','ideias supervalorizadas','obsessões','compulsões','fobias',R('ideação suicida passiva'),R('ideação suicida ativa (plano / intenção)'),R('ideação homicida / heteroagressiva')]},
+  ]},
+
+ {block:3, num:'10', id:'linguagem', name:'Linguagem e fala', obs:'Volume, velocidade, latência, articulação e prosódia.',
+  howto:'Descreva a fala objetivamente (o conteúdo vai em pensamento).', out:'single', label:'Linguagem / fala',
+  g:[{gid:'linguagem', gtype:'multiX', o:[N('volume, velocidade e articulação normais'),'logorreia','fala lentificada / empobrecida','latência aumentada','mutismo','disartria','afasia (expressiva / receptiva)','gagueira','ecolalia','verbigeração','fala arrastada (intoxicação)']}]},
+
+ {block:3, num:'11', id:'humoraf', name:'Humor e afeto', obs:'Humor (relatado / sustentado) e afeto (observado).',
+  howto:'Não confunda: humor é relatado; afeto é observado.', out:'segments',
+  g:[
+   {gid:'humor', gtype:'multiX', glabel:'Humor (relatado)', outKey:'Humor', o:[N('eutímico'),'deprimido','eufórico / expansivo','irritável','disfórico','ansioso','lábil','anedônico']},
+   {gid:'afeto', gtype:'multiX', glabel:'Afeto (observado)', outKey:'Afeto', o:[N('congruente, ressonante e modulado'),'incongruente','não-ressonante','hipomodulado','embotado','restrito / constrito','aplainado (achatado)','lábil','pueril','inadequado']},
+  ]},
+
+ {block:3, num:'12', id:'volicao', name:'Volição e pragmatismo', obs:'Iniciativa, energia para atos e atividades cotidianas.',
+  howto:'Grau de iniciativa / energia para atos.', out:'single', label:'Volição',
+  g:[{gid:'volicao', gtype:'single', o:[N('preservada'),'hipobulia','abulia','atos impulsivos','compulsões','negativismo']}]},
+
+ {block:3, num:'13', id:'critica', name:'Crítica / insight', obs:'Consciência de estar doente e da necessidade de tratamento.',
+  howto:'Gradiente preservado–parcial–ausente; decisivo para adesão e internação involuntária.', out:'single', label:'Crítica / insight',
+  g:[{gid:'critica', gtype:'single', o:[N('preservado'),'parcial (reconhece sintomas, minimiza gravidade ou recusa tratamento)','ausente (nega doença)']}]},
+
+ {block:3, num:'14', id:'juizo', name:'Juízo de realidade', obs:'Capacidade de avaliar situações e tomar decisões adequadas.',
+  howto:'Preservado vs. comprometido.', out:'single', label:'Juízo de realidade',
+  g:[{gid:'juizo', gtype:'single', o:[N('preservado'),'comprometido / prejudicado (decisões de risco, sem percepção das consequências)']}]},
+];
+
+const BLOCKS = {1:{bn:'Bloco I', t:'Observação'}, 2:{bn:'Bloco II', t:'Funções cognitivas'}, 3:{bn:'Bloco III', t:'Psiquismo, humor e juízo'}};
+
+/* ===== padrões por condição (desvios a partir do normal) ===== */
+const PRESETS = [
+ {name:'Normal', set:{}, free:{}},
+
+ {name:'Depressão', set:{
+   higiene:['descuidado / desleixo'], contato:['contato visual evitativo'], postura:['postura encurvada'],
+   psicomotr:['lentificação'], atencao:['hipoprosexia'], curso:['lentificado / bradipsiquismo'],
+   humor:['deprimido','anedônico'], afeto:['restrito / constrito','hipomodulado'], volicao:['hipobulia'],
+ }, free:{}},
+
+ {name:'Depressão psicótica', set:{
+   higiene:['descuidado / desleixo'], contato:['contato visual evitativo'], postura:['postura encurvada'],
+   psicomotr:['lentificação'], atencao:['hipoprosexia'], curso:['lentificado / bradipsiquismo'],
+   sensopercepcao:['alucinações auditivas'], conteudo:['delírio de culpa','delírio de ruína','delírio niilista'],
+   humor:['deprimido','anedônico'], afeto:['restrito / constrito','hipomodulado'], volicao:['hipobulia'],
+   critica:['parcial (reconhece sintomas, minimiza gravidade ou recusa tratamento)'],
+   juizo:['comprometido / prejudicado (decisões de risco, sem percepção das consequências)'],
+ }, free:{}},
+
+ {name:'Mania', set:{
+   higiene:['bizarro / extravagante'], contato:['contato visual fixo'], atitude:['sedutora'],
+   psicomotr:['agitação psicomotora'], atencao:['distratibilidade'], curso:['fuga de ideias'],
+   forma:['tangencialidade'], conteudo:['delírio de grandeza'], linguagem:['logorreia'],
+   humor:['eufórico / expansivo','irritável'], afeto:['lábil'], volicao:['atos impulsivos'],
+   critica:['ausente (nega doença)'],
+   juizo:['comprometido / prejudicado (decisões de risco, sem percepção das consequências)'],
+ }, free:{}},
+
+ {name:'Psicose aguda', set:{
+   higiene:['descuidado / desleixo'], contato:['contato visual evitativo'], atitude:['desconfiada / suspicaz'],
+   sensopercepcao:['alucinações auditivas','vozes comentadoras'], forma:['afrouxamento das associações'],
+   conteudo:['delírio persecutório','delírio de referência','delírio de controle / influência'],
+   afeto:['embotado','incongruente'], volicao:['hipobulia'], critica:['ausente (nega doença)'],
+   juizo:['comprometido / prejudicado (decisões de risco, sem percepção das consequências)'],
+ }, free:{}},
+
+ {name:'Delirium', set:{
+   consciencia:['rebaixamento flutuante (sugere delirium)'], psicomotr:['agitação psicomotora'],
+   orientacao:['desorientação temporal','desorientação espacial','desorientação flutuante (sugere delirium)'],
+   atencao:['hipoprosexia'], memoria:['amnésia anterógrada'], sensopercepcao:['alucinações visuais'],
+   forma:['afrouxamento das associações'], afeto:['lábil'], critica:['ausente (nega doença)'],
+   juizo:['comprometido / prejudicado (decisões de risco, sem percepção das consequências)'],
+ }, free:{consciencia:'curso flutuante ao longo do dia'}},
+
+ {name:'Abstinência alcoólica', set:{
+   psicomotr:['inquietação'], humor:['ansioso','disfórico'], afeto:['lábil'],
+   critica:['parcial (reconhece sintomas, minimiza gravidade ou recusa tratamento)'],
+ }, free:{atitude:'tremor fino de extremidades, sudorese'}},
+
+ {name:'Intoxicação por estimulante', set:{
+   consciencia:['hipervigilância'], atitude:['desconfiada / suspicaz'], psicomotr:['agitação psicomotora'],
+   atencao:['distratibilidade'], curso:['acelerado / taquipsiquismo'],
+   sensopercepcao:['alucinações táteis / hápticas (delírio dermatozoico)'], conteudo:['delírio persecutório'],
+   linguagem:['logorreia'], humor:['eufórico / expansivo','irritável'], afeto:['lábil'], volicao:['atos impulsivos'],
+   critica:['ausente (nega doença)'],
+   juizo:['comprometido / prejudicado (decisões de risco, sem percepção das consequências)'],
+ }, free:{}},
+
+ {name:'Ansiedade', set:{
+   psicomotr:['inquietação'], atencao:['hipoprosexia'], humor:['ansioso'],
+ }, free:{}},
+
+ {name:'Demência', set:{
+   higiene:['descuidado / desleixo'], orientacao:['desorientação temporal','desorientação espacial'],
+   memoria:['amnésia anterógrada'], inteligencia:['declínio cognitivo (rastrear com instrumento próprio)'],
+   forma:['pensamento concreto','perseveração'], linguagem:['fala lentificada / empobrecida'],
+   afeto:['lábil'], critica:['ausente (nega doença)'],
+   juizo:['comprometido / prejudicado (decisões de risco, sem percepção das consequências)'],
+ }, free:{}},
+];
+
+/* ===== render ===== */
+const left = document.getElementById('left');
+let lastBlock = null, blockWrap = null, gridWrap = null;
+DOM.forEach(d=>{
+  if(d.block!==lastBlock){
+    lastBlock=d.block;
+    blockWrap=document.createElement('section'); blockWrap.className='block';
+    const B=BLOCKS[d.block];
+    blockWrap.innerHTML=`<div class="blockhead"><span class="bn">${B.bn}</span><h3>${B.t}</h3><span class="rule"></span></div>`;
+    gridWrap=document.createElement('div'); gridWrap.className='cardgrid';
+    blockWrap.appendChild(gridWrap); left.appendChild(blockWrap);
+  }
+  const multi=d.g.length>1;
+  const groupsHtml=d.g.map(g=>{
+    const chips=g.o.map(opt=>{
+      const o=nm(opt);
+      const cls='chip'+(o.r?' risk':'')+(o.n?' isdef':'');
+      const attrs=`data-gid="${g.gid}" data-gtype="${g.gtype}" data-val="${o.t}"`+(o.n?' data-def="1"':'')+(o.r?' data-risk="1"':'');
+      return `<span class="${cls}" ${attrs}>${o.t}</span>`;
+    }).join('');
+    return (multi?`<div class="glab">${g.glabel}</div>`:'')+`<div class="chips">${chips}</div>`;
+  }).join('');
+  const card=document.createElement('section');
+  card.className='card'; card.dataset.id=d.id;
+  card.innerHTML=
+    `<div class="head"><div class="cat">${d.num}</div><h2>${d.name}</h2><p>${d.obs}</p><span class="badge ok">normal</span></div>`+
+    `<div class="body"><div class="howto"><span class="hk">Como preencher</span>${d.howto}</div>`+
+    groupsHtml+
+    `<input class="add" id="add-${d.id}" placeholder="+ especificar / acrescentar (ex.: tremor fino)"/></div>`;
+  gridWrap.appendChild(card);
+});
+
+/* ===== padrões: botões ===== */
+const pbtns=document.getElementById('pbtns');
+PRESETS.forEach(p=>{
+  const b=document.createElement('button'); b.className='preset'; b.textContent=p.name;
+  b.addEventListener('click',()=>applyPreset(p,b)); pbtns.appendChild(b);
+});
+
+/* ===== estado / texto ===== */
+function selVals(gid){ return Array.from(ROOT.querySelectorAll(`.chip.on[data-gid="${gid}"]`)).map(c=>c.dataset.val); }
+function freeText(id){ const el=document.getElementById('add-'+id); return el && el.value.trim() ? el.value.trim() : ''; }
+
+function buildText(){
+  const lines=[];
+  DOM.forEach(d=>{
+    const extra=freeText(d.id);
+    if(d.out==='single'){
+      let s=selVals(d.g[0].gid).join(', ');
+      if(extra) s+=(s?', ':'')+extra;
+      if(s) lines.push(d.label+': '+s+'.');
+    } else if(d.out==='join'){
+      let all=[]; d.g.forEach(g=>all.push(...selVals(g.gid)));
+      let s=all.join(', ');
+      if(extra) s+=(s?', ':'')+extra;
+      if(s) lines.push(d.label+': '+s+'.');
+    } else if(d.out==='segments'){
+      const parts=[]; d.g.forEach(g=>{const v=selVals(g.gid); if(v.length) parts.push(g.outKey+': '+v.join(', '));});
+      let body=parts.join('. ');
+      if(extra) body+=(body?'. ':'')+extra;
+      if(body) lines.push(body+'.');
+    } else if(d.out==='thought'){
+      const segs=[]; d.g.forEach(g=>{const v=selVals(g.gid); if(v.length) segs.push(g.outKey+': '+v.join(', '));});
+      let body=segs.join('; ');
+      if(extra) body+=(body?'; ':'')+extra;
+      if(body) lines.push('Pensamento — '+body+'.');
+    }
+  });
+  return lines.length ? 'EXAME DO ESTADO MENTAL\n\n'+lines.join('\n') : '';
+}
+
+function updateBadges(){
+  let alt=0, risk=0;
+  ROOT.querySelectorAll('.card').forEach(card=>{
+    let a=false,r=false;
+    card.querySelectorAll('.chip.on').forEach(c=>{ if(c.dataset.def!=='1') a=true; if(c.dataset.risk==='1') r=true; });
+    const b=card.querySelector('.badge');
+    card.classList.remove('s-alt','s-risk');
+    if(r){ b.className='badge risk'; b.textContent='risco'; card.classList.add('s-risk'); risk++; alt++; }
+    else if(a){ b.className='badge alt'; b.textContent='alterado'; card.classList.add('s-alt'); alt++; }
+    else { b.className='badge ok'; b.textContent='normal'; }
+  });
+  const sl=document.getElementById('statusline');
+  if(alt===0) sl.innerHTML='<span class="pill ok">PADRÃO NORMAL</span> todos os domínios sem alterações';
+  else sl.innerHTML=`<span class="pill alt">${alt} alterado${alt>1?'s':''}</span>`+(risk?`<span class="pill risk">${risk} com risco</span>`:'');
+}
+
+function refresh(){ document.getElementById('out').textContent=buildText(); updateBadges(); }
+
+/* ===== aplicar normal (defaults) ===== */
+function setDefaults(){
+  document.querySelectorAll('#left .chip').forEach(c=>{ if(c.dataset.def==='1') c.classList.add('on'); else c.classList.remove('on'); });
+  document.querySelectorAll('#left .add').forEach(i=>i.value='');
+}
+function applyPreset(p, btn){
+  setDefaults();
+  for(const gid in p.set){
+    const chips=Array.from(ROOT.querySelectorAll(`.chip[data-gid="${gid}"]`));
+    chips.forEach(c=>c.classList.remove('on'));
+    p.set[gid].forEach(v=>{ const c=chips.find(x=>x.dataset.val===v); if(c) c.classList.add('on'); });
+  }
+  for(const id in (p.free||{})){ const el=document.getElementById('add-'+id); if(el) el.value=p.free[id]; }
+  ROOT.querySelectorAll('.preset.active').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  document.getElementById('presetlabel').textContent=p.name.toLowerCase();
+  refresh();
+}
+
+/* ===== interações manuais ===== */
+function markCustom(){
+  ROOT.querySelectorAll('.preset.active').forEach(b=>b.classList.remove('active'));
+  document.getElementById('presetlabel').textContent='personalizado';
+}
+left.addEventListener('click', e=>{
+  const chip=e.target.closest('.chip'); if(!chip) return;
+  const gid=chip.dataset.gid, gtype=chip.dataset.gtype;
+  const group=Array.from(ROOT.querySelectorAll(`.chip[data-gid="${gid}"]`));
+  if(gtype==='single'){
+    group.forEach(c=>c.classList.remove('on')); chip.classList.add('on');
+  } else if(gtype==='multiX'){
+    const norm=group.find(c=>c.dataset.def==='1');
+    if(chip===norm){ group.forEach(c=>c.classList.remove('on')); norm.classList.add('on'); }
+    else {
+      chip.classList.toggle('on');
+      if(chip.classList.contains('on') && norm) norm.classList.remove('on');
+      if(!group.some(c=>c.classList.contains('on')) && norm) norm.classList.add('on');
+    }
+  } else { chip.classList.toggle('on'); }
+  markCustom(); refresh();
+});
+left.addEventListener('input', e=>{ if(e.target.classList.contains('add')){ markCustom(); refresh(); } });
+
+document.getElementById('btnReset').addEventListener('click', ()=>applyPreset(PRESETS[0], ROOT.querySelector('.preset')));
+
+/* ===== copiar ===== */
+function copyEEM(btn){
+  const txt=buildText(); const orig=btn.textContent;
+  const done=()=>{ btn.textContent='Copiado ✓'; btn.classList.add('done'); setTimeout(()=>{btn.textContent=orig;btn.classList.remove('done');},1600); };
+  if(!txt){ btn.textContent='Nada para copiar'; setTimeout(()=>btn.textContent=orig,1400); return; }
+  if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done).catch(()=>fb(txt,done));
+  else fb(txt,done);
+}
+function fb(txt,cb){ const ta=document.createElement('textarea'); ta.value=txt; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy');}catch(e){} document.body.removeChild(ta); cb(); }
+document.getElementById('btnCopyTop').addEventListener('click', function(){ copyEEM(this); });
+document.getElementById('btnCopySide').addEventListener('click', function(){ copyEEM(this); });
+
+/* ===== início: normal ===== */
+applyPreset(PRESETS[0], ROOT.querySelector('.preset'));
+})();
 </script>
 </body>
 </html>
